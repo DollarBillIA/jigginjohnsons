@@ -1,0 +1,46 @@
+<nav class="navUser">
+    <ul class="navUser-section navUser-section--alt">
+        <li class="navUser-item navUser-item--account">
+            <i class="icon" aria-hidden="true">
+                <svg><use xlink:href="#icon-user" /></svg>
+            </i>
+            {{#if customer}}
+                <a class="navUser-action" href="{{urls.account.index}}">{{lang 'common.account'}}</a> or
+                <a class="navUser-action" href="{{urls.auth.logout}}">{{lang 'common.logout'}}</a>
+            {{else}}
+                <a class="navUser-action"
+                   href="{{urls.auth.login}}"
+                   aria-label="{{lang 'common.login'}}"
+                >
+                    {{lang 'common.login'}}
+                </a>
+                {{#if settings.account_creation_enabled}}
+                    <span>{{lang 'common.or'}}</span> <a class="navUser-action" href="{{urls.auth.create_account}}">{{lang 'common.sign_up'}}</a>
+                {{/if}}
+            {{/if}}
+        </li>
+        {{> components/common/currency-selector}}
+        <li class="navUser-item navUser-item--mobile-search">
+            <i class="icon" aria-hidden="true">
+                <svg><use xlink:href="#icon-search" /></svg>
+            </i>
+        </li>
+        <li class="navUser-item navUser-item--cart">
+            <a
+                class="navUser-action"
+                data-cart-preview
+                data-dropdown="cart-preview-dropdown"
+                data-options="align:right"
+                href="{{urls.cart}}"
+                aria-label="{{lang 'cart.nav_aria_label'}}"
+            >
+                <i class="icon" aria-hidden="true">
+                    <svg><use xlink:href="#icon-cart" /></svg>
+                </i>
+                (<span class="{{#if cart.items}} countPill--positive{{/if}} cart-quantity">{{cart.quantity}}</span>)
+            </a>
+
+            <div class="dropdown-menu" id="cart-preview-dropdown" data-dropdown-content aria-hidden="true"></div>
+        </li>
+    </ul>
+</nav>

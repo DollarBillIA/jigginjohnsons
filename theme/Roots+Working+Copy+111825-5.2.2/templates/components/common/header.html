@@ -1,0 +1,54 @@
+<header class="header" role="banner">
+    <a href="#" class="mobileMenu-toggle" data-mobile-menu-toggle="menu">
+        <span class="mobileMenu-toggleIcon"></span>
+    </a>
+
+    <div class="header-logo--wrap">
+        <div class="header-logo{{#if theme_settings.logo_size '===' 'original'}} logo-full-size-desktop{{/if}}{{#if theme_settings.logo_size_mobile '===' 'original'}} logo-full-size-mobile{{/if}}">
+            
+            <div class="logo-and-toggle">
+                <div class="desktopMenu-toggle">
+                    <a href="javascript:void(0);" class="mobileMenu-toggle">
+                        <span class="mobileMenu-toggleIcon"></span>
+                    </a>
+                </div>
+                
+                {{#if page_type '===' 'default'}}
+                    <h1 class="logo-wrap">{{> components/common/store-logo}}</h1>
+                {{else}}
+                    <div class="logo-wrap">{{> components/common/store-logo}}</div>
+                {{/if}}
+            </div>
+            
+            <div class="quickSearchWrap" id="quickSearch" aria-hidden="true" tabindex="-1" data-prevent-quick-search-close>
+                {{> components/common/quick-search}}
+            </div>
+            <div class="navUser-wrap">
+                {{> components/common/navigation}}
+            </div>
+        </div>
+    </div>
+
+    <div class="navPages-container" id="menu" data-menu>
+        {{> components/common/navigation-menu}}
+    </div>
+</header>
+{{#unless page_type '===' 'default'}}
+
+{{#if banners.top}}
+<div class="banners" data-banner-location="top">
+    {{#each (limit banners.top_metadata 1)}}
+    <div class="banner" data-event-type="promotion" data-entity-id="{{this.id}}" data-name="{{this.banner-name}}" data-position="{{this.location}}" data-banner-id="{{this.banner-name}}">
+        <div data-event-type="promotion-click">
+            {{{this.content}}}
+        </div>
+    </div>
+    {{/each}}
+</div>
+{{/if}}
+
+{{/unless}}
+
+{{{region name="header_bottom--global"}}}
+{{{region name="header_bottom"}}}
+
