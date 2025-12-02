@@ -1,0 +1,20 @@
+# Ignore Stencil build output
+assets/dist/
+parsed/
+
+# Ignore generated metadata
+schema.json
+manifest.json
+package-lock.json
+
+# Ignore all compiled theme bundles
+*.zip
+*.bundle.js
+*.bundle.css
+
+# Misc
+*.map
+.DS_Store
+npm-debug.log*
+
+
