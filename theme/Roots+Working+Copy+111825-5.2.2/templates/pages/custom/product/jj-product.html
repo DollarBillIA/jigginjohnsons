@@ -1,10 +1,23 @@
-{{!< layout/base}}
+---
+product:
+    videos:
+        limit: {{theme_settings.productpage_videos_count}}
+    reviews:
+        limit: {{theme_settings.productpage_reviews_count}}
+    related_products:
+        limit: {{theme_settings.productpage_related_products_count}}
+    similar_by_views:
+        limit: {{theme_settings.productpage_similar_by_views_count}}
+---
+
+{{inject 'productId' product.id}}
 
 {{#partial "page"}}
 
 <main class="page-shell" id="jj-product-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href="/">Home</a> / <a href="/jiggin-johnsons/">Jiggin’ Johnson’s</a> /
+    <a href="/">Home</a> /
+    <a href="/jiggin-johnsons/">Jiggin’ Johnson’s</a> /
     <span>Sample Soft Plastic</span>
   </nav>
 
@@ -13,13 +26,23 @@
       <!-- GALLERY -->
       <section class="product-gallery" aria-label="Product images">
         <div class="gallery-main">
-          <button class="img-arrow img-arrow--left" type="button" aria-label="Previous color">&#8249;</button>
+          <button class="img-arrow img-arrow--left"
+                  type="button"
+                  aria-label="Previous color">
+            &#8249;
+          </button>
+
           <img
             id="main-image"
             src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
             alt="Jiggin’ Johnson’s sample bait in Color A"
           />
-          <button class="img-arrow img-arrow--right" type="button" aria-label="Next color">&#8250;</button>
+
+          <button class="img-arrow img-arrow--right"
+                  type="button"
+                  aria-label="Next color">
+            &#8250;
+          </button>
         </div>
 
         <div class="gallery-thumbs" aria-label="Color thumbnails">
@@ -27,21 +50,24 @@
                   type="button"
                   data-src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
                   data-color="Color A">
-            <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=A" alt="Color A" />
+            <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=A"
+                 alt="Color A" />
           </button>
 
           <button class="gallery-thumb"
                   type="button"
                   data-src="https://via.placeholder.com/900x675/35633c/ffffff?text=Color+B"
                   data-color="Color B">
-            <img src="https://via.placeholder.com/140x140/35633c/ffffff?text=B" alt="Color B" />
+            <img src="https://via.placeholder.com/140x140/35633c/ffffff?text=B"
+                 alt="Color B" />
           </button>
 
           <button class="gallery-thumb"
                   type="button"
                   data-src="https://via.placeholder.com/900x675/4a2e28/ffffff?text=Color+C"
                   data-color="Color C">
-            <img src="https://via.placeholder.com/140x140/4a2e28/ffffff?text=C" alt="Color C" />
+            <img src="https://via.placeholder.com/140x140/4a2e28/ffffff?text=C"
+                 alt="Color C" />
           </button>
         </div>
       </section>
@@ -59,9 +85,10 @@
         <h1 class="product-title">
           Jiggin’ Johnson’s Sample Soft Plastic Bait
         </h1>
+
         <p class="product-subtitle">
-          Demo layout for the new mobile-first product template. We’ll swap this copy and wiring for
-          real Jiggin’ Johnson’s SKUs once the shell is tested.
+          Demo layout for the new mobile-first product template. We’ll swap this copy and wiring
+          for real Jiggin’ Johnson’s SKUs once the shell is tested.
         </p>
 
         <!-- COLOR -->
@@ -70,6 +97,7 @@
             <span class="config-label">Color</span>
             <span class="config-hint">Tap a color or swipe the thumbnails</span>
           </div>
+
           <div class="pill-row pill-row--scroll">
             <button class="pill is-active"
                     type="button"
@@ -77,12 +105,14 @@
                     data-img="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A">
               Color A
             </button>
+
             <button class="pill"
                     type="button"
                     data-value="Color B"
                     data-img="https://via.placeholder.com/900x675/35633c/ffffff?text=Color+B">
               Color B
             </button>
+
             <button class="pill"
                     type="button"
                     data-value="Color C"
@@ -98,6 +128,7 @@
             <span class="config-label">Size</span>
             <span class="config-hint">We’ll wire real variants later</span>
           </div>
+
           <div class="pill-row">
             <button class="pill is-active" type="button">2.5"</button>
             <button class="pill" type="button">3.0"</button>
@@ -107,15 +138,28 @@
         <!-- QTY + BUTTON -->
         <div class="qty-row">
           <div class="qty-control">
-            <button class="qty-btn" type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+            <button class="qty-btn"
+                    type="button"
+                    data-qty-change="-1"
+                    aria-label="Decrease quantity">
+              −
+            </button>
+
             <span class="qty-value" id="qty-value">1</span>
-            <button class="qty-btn" type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
+
+            <button class="qty-btn"
+                    type="button"
+                    data-qty-change="1"
+                    aria-label="Increase quantity">
+              +
+            </button>
           </div>
 
           <button class="btn-primary" type="button">
             Add to Cart (demo)
           </button>
         </div>
+
         <p class="ship-note">
           Demo text: real availability/shipping messaging for Jiggin’ Johnson’s will go here.
         </p>
@@ -123,19 +167,23 @@
         <!-- RIG QUICK LIST (DEMO) -->
         <div class="rig-block">
           <div class="rig-title">Best ways to fish it (demo)</div>
+
           <div class="rig-grid">
             <a href="#" class="rig-card">
               <strong>Swim Jig Trailer</strong>
               <span>Shallow grass, slow roll</span>
             </a>
+
             <a href="#" class="rig-card">
               <strong>Texas Rig</strong>
               <span>Pitching to cover</span>
             </a>
+
             <a href="#" class="rig-card">
               <strong>Ball Jig Head</strong>
               <span>Dragging sand or rock</span>
             </a>
+
             <a href="#" class="rig-card">
               <strong>Split Shot</strong>
               <span>Natural subtle glides</span>
@@ -151,9 +199,9 @@
         <summary>On-the-water overview (demo copy)</summary>
         <div class="details-body">
           <p>
-            This is placeholder text for Jiggin’ Johnson’s new template shell. Once we’re happy with
-            the layout and behavior, we’ll plug in real product descriptions, rigging tips, and JJ-
-            specific language.
+            This is placeholder text for Jiggin’ Johnson’s new template shell. Once we’re happy
+            with the layout and behavior, we’ll plug in real product descriptions, rigging tips,
+            and JJ-specific language.
           </p>
         </div>
       </details>
@@ -183,15 +231,21 @@
 <!-- STICKY MOBILE CART (DEMO) -->
 <section class="sticky-cart" aria-label="Quick add to cart">
   <div class="sticky-cart__summary">
-    <div class="sticky-cart__title">Jiggin’ Johnson’s Sample Soft Plastic</div>
+    <div class="sticky-cart__title">
+      Jiggin’ Johnson’s Sample Soft Plastic
+    </div>
+
     <div class="sticky-cart__meta">
       <span class="sticky-cart__variant">Color A</span>
       <span class="sticky-cart__price">$6.99</span>
     </div>
   </div>
+
   <button class="sticky-cart__btn" type="button">
     Add to Cart
   </button>
 </section>
 
 {{/partial}}
+
+{{> layout/base}}
