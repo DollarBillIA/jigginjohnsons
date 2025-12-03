@@ -435,3 +435,62 @@
     display: none;
   }
 }
+/* === Layout / gallery overrides for desktop === */
+
+#jj-product-page {
+  /* Keep the main shell nicely centered and not too wide */
+  .page-shell {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  /* Two-column layout on larger screens, single column on mobile */
+  .product-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: flex-start;
+
+    @media (max-width: 900px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* Make sure the gallery column can use the full width it’s given */
+  .product-gallery {
+    width: 100%;
+  }
+
+  .gallery-main {
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000; /* acts as a “frame” behind the image */
+  }
+
+  .gallery-main img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  /* Thumbnails row: scrollable on mobile, neat row on desktop */
+  .gallery-thumbs {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+
+  .gallery-thumb img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+}
