@@ -1,5 +1,6 @@
 {
-  "name": "Roots Working Copy 111825",
+  "name": "jj-base-theme",
+  "display_name": "JJ Base Theme",
   "version": "5.2.2",
   "template_engine": "handlebars_v4",
   "meta": {
