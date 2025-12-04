@@ -14,21 +14,22 @@ product:
 
 <main class="page-shell" id="jj-product-page">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <a href="/">Home</a> /
-    <a href="/jiggin-johnsons/">Jiggin’ Johnson’s</a> /
-    <span>Sample Soft Plastic</span>
+    {{> components/common/breadcrumbs}}
   </nav>
 
   <article class="product-card">
     <div class="product-layout">
-      <!-- GALLERY -->
+
+      {{!-- =========================
+           GALLERY (DEMO FOR NOW)
+      ========================== --}}
       <section class="product-gallery" aria-label="Product images">
         <div class="gallery-main">
           <button class="img-arrow img-arrow--left" type="button" aria-label="Previous color">&#8249;</button>
           <img
             id="main-image"
             src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
-            alt="Jiggin’ Johnson’s sample bait in Color A"
+            alt="{{product.title}} – Color A demo"
           />
           <button class="img-arrow img-arrow--right" type="button" aria-label="Next color">&#8250;</button>
         </div>
@@ -40,7 +41,7 @@ product:
             data-src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
             data-color="Color A"
           >
-            <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=A" alt="Color A" />
+            <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=A" alt="Color A (demo)" />
           </button>
 
           <button
@@ -49,7 +50,7 @@ product:
             data-src="https://via.placeholder.com/900x675/35633c/ffffff?text=Color+B"
             data-color="Color B"
           >
-            <img src="https://via.placeholder.com/140x140/35633c/ffffff?text=B" alt="Color B" />
+            <img src="https://via.placeholder.com/140x140/35633c/ffffff?text=B" alt="Color B (demo)" />
           </button>
 
           <button
@@ -58,30 +59,41 @@ product:
             data-src="https://via.placeholder.com/900x675/4a2e28/ffffff?text=Color+C"
             data-color="Color C"
           >
-            <img src="https://via.placeholder.com/140x140/4a2e28/ffffff?text=C" alt="Color C" />
+            <img src="https://via.placeholder.com/140x140/4a2e28/ffffff?text=C" alt="Color C (demo)" />
           </button>
         </div>
       </section>
 
-      <!-- SUMMARY + CONFIG -->
+      {{!-- =========================
+           SUMMARY + CONFIG
+      ========================== --}}
       <section class="summary-and-config">
+
+        {{!-- Brand + Price + Title + Summary from real product data --}}
         <div class="brand-row">
+          {{#if product.brand}}
           <div class="brand-chip">
             <span class="brand-chip-logo" aria-hidden="true"></span>
-            <span>Jiggin’ Johnson’s</span>
+            <a href="{{product.brand.url}}">{{product.brand.name}}</a>
           </div>
-          <div class="product-price">$6.99</div>
+          {{/if}}
+
+          <div class="product-price">
+            {{> components/products/price price=product.price}}
+          </div>
         </div>
 
         <h1 class="product-title">
-          Jiggin’ Johnson’s Sample Soft Plastic Bait
+          {{product.title}}
         </h1>
-        <p class="product-subtitle">
-          Demo layout for the new mobile-first product template. We’ll swap this copy and wiring for
-          real Jiggin’ Johnson’s SKUs once the shell is tested.
-        </p>
 
-        <!-- COLOR -->
+        {{#if product.summary}}
+        <p class="product-subtitle">
+          {{{product.summary}}}
+        </p>
+        {{/if}}
+
+        {{!-- CONFIG GROUPS – demo UI only for now --}}
         <div class="config-group" data-config="color">
           <div class="config-header-row">
             <span class="config-label">Color</span>
@@ -115,7 +127,6 @@ product:
           </div>
         </div>
 
-        <!-- SIZE (EXAMPLE SECOND GROUP) -->
         <div class="config-group" data-config="size">
           <div class="config-header-row">
             <span class="config-label">Size</span>
@@ -127,7 +138,7 @@ product:
           </div>
         </div>
 
-        <!-- QTY + BUTTON -->
+        {{!-- QTY + BUTTON – still demo, not bound to real cart yet --}}
         <div class="qty-row">
           <div class="qty-control">
             <button class="qty-btn" type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
@@ -139,44 +150,48 @@ product:
             Add to Cart (demo)
           </button>
         </div>
+
         <p class="ship-note">
           Demo text: real availability/shipping messaging for Jiggin’ Johnson’s will go here.
         </p>
 
-        <!-- RIG QUICK LIST (DEMO) -->
+        {{!-- Best ways to fish it --}}
         <div class="rig-block">
           <div class="rig-title">Best ways to fish it (demo)</div>
           <div class="rig-grid">
-            <a href="#" class="rig-card">
+            <div class="rig-card">
               <strong>Swim Jig Trailer</strong>
               <span>Shallow grass, slow roll</span>
-            </a>
-            <a href="#" class="rig-card">
+            </div>
+            <div class="rig-card">
               <strong>Texas Rig</strong>
               <span>Pitching to cover</span>
-            </a>
-            <a href="#" class="rig-card">
+            </div>
+            <div class="rig-card">
               <strong>Ball Jig Head</strong>
               <span>Dragging sand or rock</span>
-            </a>
-            <a href="#" class="rig-card">
+            </div>
+            <div class="rig-card">
               <strong>Split Shot</strong>
               <span>Natural subtle glides</span>
-            </a>
+            </div>
           </div>
         </div>
+
       </section>
     </div>
 
-    <!-- DETAILS / ACCORDIONS -->
+    {{!-- =========================
+         DETAILS / ACCORDIONS
+    ========================== --}}
     <section class="details-shell" aria-label="Details and specs">
       <details open>
         <summary>On-the-water overview (demo copy)</summary>
         <div class="details-body">
           <p>
             This is placeholder text for Jiggin’ Johnson’s new template shell. Once we’re happy with
-            the layout and behavior, we’ll plug in real product descriptions, rigging tips, and JJ-
-            specific language.
+            the layout and behavior, we’ll plug in real product descriptions, rigging tips, and
+            JJ-specific language.
           </p>
         </div>
       </details>
@@ -203,13 +218,15 @@ product:
   </article>
 </main>
 
-<!-- STICKY MOBILE CART (DEMO) -->
+{{!-- STICKY MOBILE CART (DEMO) --}}
 <section class="sticky-cart" aria-label="Quick add to cart">
   <div class="sticky-cart__summary">
-    <div class="sticky-cart__title">Jiggin’ Johnson’s Sample Soft Plastic</div>
+    <div class="sticky-cart__title">{{product.title}}</div>
     <div class="sticky-cart__meta">
       <span class="sticky-cart__variant">Color A</span>
-      <span class="sticky-cart__price">$6.99</span>
+      <span class="sticky-cart__price">
+        {{> components/products/price price=product.price}}
+      </span>
     </div>
   </div>
   <button class="sticky-cart__btn" type="button">
