@@ -21,46 +21,53 @@ product:
     <div class="product-layout">
 
       {{!-- =========================
-           GALLERY (DEMO FOR NOW)
+           GALLERY (real images)
       ========================== --}}
       <section class="product-gallery" aria-label="Product images">
         <div class="gallery-main">
-          <button class="img-arrow img-arrow--left" type="button" aria-label="Previous color">&#8249;</button>
-          <img
-            id="main-image"
-            src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
-            alt="{{product.title}} – Color A demo"
-          />
-          <button class="img-arrow img-arrow--right" type="button" aria-label="Next color">&#8250;</button>
+          <button class="img-arrow img-arrow--left" type="button" data-direction="prev" aria-label="Previous image">&#8249;</button>
+
+          {{#if product.main_image}}
+            <img
+              id="jj-main-image"
+              src="{{getImage product.main_image 'zoom'}}"
+              alt="{{product.main_image.alt}}"
+              data-image-index="0"
+            />
+          {{else}}
+            <img
+              id="jj-main-image"
+              src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=No+Image"
+              alt="{{product.title}}"
+              data-image-index="0"
+            />
+          {{/if}}
+
+          <button class="img-arrow img-arrow--right" type="button" data-direction="next" aria-label="Next image">&#8250;</button>
         </div>
 
-        <div class="gallery-thumbs" aria-label="Color thumbnails">
-          <button
-            class="gallery-thumb is-active"
-            type="button"
-            data-src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
-            data-color="Color A"
-          >
-            <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=A" alt="Color A (demo)" />
-          </button>
-
-          <button
-            class="gallery-thumb"
-            type="button"
-            data-src="https://via.placeholder.com/900x675/35633c/ffffff?text=Color+B"
-            data-color="Color B"
-          >
-            <img src="https://via.placeholder.com/140x140/35633c/ffffff?text=B" alt="Color B (demo)" />
-          </button>
-
-          <button
-            class="gallery-thumb"
-            type="button"
-            data-src="https://via.placeholder.com/900x675/4a2e28/ffffff?text=Color+C"
-            data-color="Color C"
-          >
-            <img src="https://via.placeholder.com/140x140/4a2e28/ffffff?text=C" alt="Color C (demo)" />
-          </button>
+        <div class="gallery-thumbs" aria-label="Thumbnails">
+          {{#if product.images}}
+            {{#each product.images}}
+              <button
+                class="gallery-thumb{{#if @first}} is-active{{/if}}"
+                type="button"
+                data-image-index="{{@index}}"
+                data-src="{{getImage this 'zoom'}}"
+              >
+                <img src="{{getImage this 'thumb'}}" alt="{{this.alt}}">
+              </button>
+            {{/each}}
+          {{else}}
+            <button
+              class="gallery-thumb is-active"
+              type="button"
+              data-image-index="0"
+              data-src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=No+Image"
+            >
+              <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=No+Image" alt="No image">
+            </button>
+          {{/if}}
         </div>
       </section>
 
@@ -69,7 +76,7 @@ product:
       ========================== --}}
       <section class="summary-and-config">
 
-        {{!-- Brand + Price + Title + Summary from real product data --}}
+        {{!-- Brand + price + title + summary --}}
         <div class="brand-row">
           {{#if product.brand}}
           <div class="brand-chip">
@@ -93,69 +100,75 @@ product:
         </p>
         {{/if}}
 
-        {{!-- CONFIG GROUPS – demo UI only for now --}}
-        <div class="config-group" data-config="color">
-          <div class="config-header-row">
-            <span class="config-label">Color</span>
-            <span class="config-hint">Tap a color or swipe the thumbnails</span>
-          </div>
-          <div class="pill-row pill-row--scroll">
-            <button
-              class="pill is-active"
-              type="button"
-              data-value="Color A"
-              data-img="https://via.placeholder.com/900x675/3b6c94/ffffff?text=Color+A"
-            >
-              Color A
+        {{!-- =========================
+             ADD TO CART FORM
+        ========================== --}}
+        <form
+          id="jj-product-form"
+          class="jj-product-form"
+          method="post"
+          action="/cart.php"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="action" value="add">
+          <input type="hidden" name="product_id" value="{{product.id}}">
+          <input type="hidden" id="jj-qty-input" name="qty[]" value="1">
+
+          {{!-- Options → pills, replacing native UI --}}
+          {{#if product.options}}
+            {{#each product.options}}
+              <div class="config-group" data-option-id="{{id}}">
+                <div class="config-header-row">
+                  <span class="config-label">{{display_name}}</span>
+                  {{#if required}}
+                    <span class="config-required" aria-hidden="true">*</span>
+                  {{/if}}
+                </div>
+
+                <div class="pill-row pill-row--scroll">
+                  {{#each values}}
+                    <button
+                      class="pill{{#if selected}} is-active{{/if}}"
+                      type="button"
+                      data-option-id="{{../id}}"
+                      data-value-id="{{id}}"
+                    >
+                      {{label}}
+                    </button>
+
+                    <input
+                      type="radio"
+                      class="jj-option-input"
+                      name="attribute[{{../id}}]"
+                      value="{{id}}"
+                      {{#if selected}}checked{{/if}}
+                      hidden
+                    >
+                  {{/each}}
+                </div>
+              </div>
+            {{/each}}
+          {{/if}}
+
+          {{!-- QTY + primary add-to-cart --}}
+          <div class="qty-row">
+            <div class="qty-control">
+              <button class="qty-btn" type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+              <span class="qty-value" id="jj-qty-display">1</span>
+              <button class="qty-btn" type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
+            </div>
+
+            <button class="btn-primary" type="submit" id="jj-add-to-cart-main">
+              Add to Cart
             </button>
-            <button
-              class="pill"
-              type="button"
-              data-value="Color B"
-              data-img="https://via.placeholder.com/900x675/35633c/ffffff?text=Color+B"
-            >
-              Color B
-            </button>
-            <button
-              class="pill"
-              type="button"
-              data-value="Color C"
-              data-img="https://via.placeholder.com/900x675/4a2e28/ffffff?text=Color+C"
-            >
-              Color C
-            </button>
-          </div>
-        </div>
-
-        <div class="config-group" data-config="size">
-          <div class="config-header-row">
-            <span class="config-label">Size</span>
-            <span class="config-hint">We’ll wire real variants later</span>
-          </div>
-          <div class="pill-row">
-            <button class="pill is-active" type="button">2.5"</button>
-            <button class="pill" type="button">3.0"</button>
-          </div>
-        </div>
-
-        {{!-- QTY + BUTTON – still demo, not bound to real cart yet --}}
-        <div class="qty-row">
-          <div class="qty-control">
-            <button class="qty-btn" type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
-            <span class="qty-value" id="qty-value">1</span>
-            <button class="qty-btn" type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
           </div>
 
-          <button class="btn-primary" type="button">
-            Add to Cart (demo)
-          </button>
-        </div>
+          <p class="ship-note">
+            Demo text: real availability/shipping messaging for Jiggin’ Johnson’s will go here.
+          </p>
+        </form>
 
-        <p class="ship-note">
-          Demo text: real availability/shipping messaging for Jiggin’ Johnson’s will go here.
-        </p>
-
-        {{!-- Best ways to fish it --}}
+        {{!-- Best ways to fish it (static for now) --}}
         <div class="rig-block">
           <div class="rig-title">Best ways to fish it (demo)</div>
           <div class="rig-grid">
@@ -218,18 +231,18 @@ product:
   </article>
 </main>
 
-{{!-- STICKY MOBILE CART (DEMO) --}}
+{{!-- STICKY MOBILE CART (AJAX-triggered) --}}
 <section class="sticky-cart" aria-label="Quick add to cart">
   <div class="sticky-cart__summary">
     <div class="sticky-cart__title">{{product.title}}</div>
     <div class="sticky-cart__meta">
-      <span class="sticky-cart__variant">Color A</span>
+      <span class="sticky-cart__variant">Select options</span>
       <span class="sticky-cart__price">
         {{> components/products/price price=product.price}}
       </span>
     </div>
   </div>
-  <button class="sticky-cart__btn" type="button">
+  <button class="sticky-cart__btn" type="button" id="jj-add-to-cart-sticky">
     Add to Cart
   </button>
 </section>
