@@ -26,32 +26,77 @@ product:
     <div class="product-layout">
 
       {{!-- =========================
-           GALLERY – BC product images + arrows
-           (arrows drive COLOR radios)
+           GALLERY – Cornerstone-style
+           (respects variant images)
       ========================== --}}
-      <section class="product-gallery" aria-label="Product images">
-        <div class="gallery-main">
-          <button
-            class="img-arrow img-arrow--left"
-            type="button"
-            aria-label="Previous color"
-          >
-            &#8249;
-          </button>
+      <section class="product-gallery productView-images" data-image-gallery>
 
-          {{!-- Standard Roots gallery markup so BC JS can control images --}}
-          <div class="productView-images" data-image-gallery>
-            {{> components/products/product-images}}
+        {{#if product.images.length '>' 1}}
+          {{> components/carousel-content-announcement}}
+        {{/if}}
+
+        <figure
+          class="productView-image"
+          data-image-gallery-main
+          {{#if product.main_image}}
+            data-zoom-image="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size }}"
+          {{/if}}
+        >
+          <div class="productView-img-container">
+            {{#if product.main_image}}
+              <a
+                href="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size}}"
+                target="_blank"{{#if schema}} itemprop="image"{{/if}}
+              >
+            {{/if}}
+
+            {{> components/common/responsive-img
+                image=product.main_image
+                class="productView-image--default"
+                fallback_size=theme_settings.product_size
+                lazyload=theme_settings.lazyload_mode
+                default_image=theme_settings.default_image_product
+                otherAttributes="data-main-image"
+            }}
+
+            {{#if product.main_image}}
+              </a>
+            {{/if}}
           </div>
+        </figure>
 
-          <button
-            class="img-arrow img-arrow--right"
-            type="button"
-            aria-label="Next color"
-          >
-            &#8250;
-          </button>
-        </div>
+        <ul
+          class="productView-thumbnails"
+          {{#gt product.images.length 5}}
+            data-slick='{
+              "infinite": false,
+              "mobileFirst": true,
+              "dots": false,
+              "accessibility": false,
+              "slidesToShow": 5,
+              "slidesToScroll": 5
+            }'
+          {{/gt}}
+        >
+          {{#each product.images}}
+            <li class="productView-thumbnail">
+              <a
+                class="productView-thumbnail-link"
+                href="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}"
+                data-image-gallery-item
+                data-image-gallery-new-image-url="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.product_size}}"
+                data-image-gallery-new-image-srcset="{{getImageSrcset this use_default_sizes=true}}"
+                data-image-gallery-zoom-image-url="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}"
+              >
+                {{> components/common/responsive-img
+                    image=this
+                    fallback_size=../theme_settings.productview_thumb_size
+                    lazyload=../theme_settings.lazyload_mode
+                }}
+              </a>
+            </li>
+          {{/each}}
+        </ul>
       </section>
 
       {{!-- =========================
@@ -62,14 +107,13 @@ product:
         {{!-- Brand + price --}}
         <div class="brand-row">
           {{#if product.brand}}
-          <div class="brand-chip">
-            <span class="brand-chip-logo" aria-hidden="true"></span>
-            <a href="{{product.brand.url}}">{{product.brand.name}}</a>
-          </div>
+            <div class="brand-chip">
+              <span class="brand-chip-logo" aria-hidden="true"></span>
+              <a href="{{product.brand.url}}">{{product.brand.name}}</a>
+            </div>
           {{/if}}
 
-          {{!-- BC JS price target --}}
-          <div class="productView-price product-price" data-product-price>
+          <div class="product-price" data-product-price>
             {{> components/products/price price=product.price}}
           </div>
         </div>
@@ -79,9 +123,9 @@ product:
         </h1>
 
         {{#if product.summary}}
-        <p class="product-subtitle">
-          {{{product.summary}}}
-        </p>
+          <p class="product-subtitle">
+            {{{product.summary}}}
+          </p>
         {{/if}}
 
         {{!-- =========================
@@ -244,7 +288,7 @@ product:
     <div class="sticky-cart__title">{{product.title}}</div>
     <div class="sticky-cart__meta">
       <span class="sticky-cart__variant">Select options</span>
-      <span class="sticky-cart__price">
+      <span class="sticky-cart__price" data-product-price>
         {{> components/products/price price=product.price}}
       </span>
     </div>
