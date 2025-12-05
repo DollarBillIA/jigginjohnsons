@@ -116,3 +116,84 @@
 .productView + .jj-details-shell + .product-tabs {
   margin-top: 2.5rem;
 }
+
+/* ---------------------------------------------------
+   SWATCH ROWS → SINGLE-LINE HORIZONTAL SCROLL
+   (Use BC's native swatches, just change layout)
+   --------------------------------------------------- */
+
+/* Target swatch-type options inside the JJ layout */
+.jj-product-page .productView-options-inner .form-field[data-product-attribute="swatch"] {
+  margin-bottom: 1.25rem;
+}
+
+/* Make the swatch area a horizontal scroller, no wrapping */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-field-control {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* If the theme uses an extra wrapper for the options list, keep it inline */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option-wrapper {
+  display: inline-flex;
+}
+
+/* Each swatch tile: lock to ~65px square so you get 5–6 visible */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option {
+  flex: 0 0 65px;
+  width: 65px;
+  height: 65px;
+}
+
+/* Make sure the clickable hit area fills the tile */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option-swatch,
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option-variant {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label under/inside swatch: keep small and centered */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option-variant {
+  font-size: 0.7rem;
+  line-height: 1.1;
+  text-align: center;
+  padding: 0.15rem 0.2rem;
+}
+
+/* Optional: subtle focus ring when selected/hovered */
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option.is-active,
+.jj-product-page
+  .productView-options-inner
+  .form-field[data-product-attribute="swatch"]
+  .form-option:hover {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+}
