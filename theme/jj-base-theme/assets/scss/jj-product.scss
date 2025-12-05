@@ -1,496 +1,118 @@
-/* ============================
-   Jiggin’ Johnson’s Product Layout
-   Scoped to #jj-product-page
-   ============================ */
+// JJ PRODUCT LAYOUT OVERRIDES
+// Scoped to the JJ wrapper so other products stay stock.
 
-#jj-product-page {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #222;
-  background: #f7f7f7;
-  padding: 1.25rem 0 5rem;
+.jj-product-page {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
 }
 
-/* Basic container behavior (Root’s main width is handled by BC theme) */
-#jj-product-page .page-shell {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Breadcrumbs */
-#jj-product-page .breadcrumbs {
-  font-size: 0.8rem;
-  color: #777;
-  margin-bottom: 0.75rem;
-}
-
-#jj-product-page .breadcrumbs a {
-  color: #777;
-  text-decoration: none;
-}
-
-#jj-product-page .breadcrumbs a:hover {
-  text-decoration: underline;
-}
-
-/* Card shell */
-#jj-product-page .product-card {
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-  padding: 1.25rem;
-}
-
-/* Layout: gallery vs summary */
-#jj-product-page .product-layout {
+/* Base layout: stack on mobile, two-column on wider screens */
+.jj-product-page .productView {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-/* Desktop split */
-@media (min-width: 900px) {
-  #jj-product-page .product-layout {
+.jj-product-page .productView-images {
+  width: 100%;
+}
+
+.jj-product-page .productView-details {
+  width: 100%;
+}
+
+/* Tablet / desktop split */
+@media (min-width: 768px) {
+  .jj-product-page .productView {
     flex-direction: row;
     align-items: flex-start;
   }
 
-  #jj-product-page .product-gallery {
-    flex: 1 1 50%;
+  .jj-product-page .productView-images {
+    flex: 1 1 55%;
+    max-width: 55%;
   }
 
-  #jj-product-page .summary-and-config {
-    flex: 1 1 50%;
-  }
-}
-
-/* Gallery main image */
-#jj-product-page .product-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-#jj-product-page .gallery-main {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #111;
-}
-
-#jj-product-page .gallery-main img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Arrows */
-#jj-product-page .img-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-}
-
-#jj-product-page .img-arrow--left {
-  left: 8px;
-}
-
-#jj-product-page .img-arrow--right {
-  right: 8px;
-}
-
-#jj-product-page .img-arrow:hover {
-  background: rgba(0, 0, 0, 0.8);
-}
-
-/* Thumbnails */
-#jj-product-page .gallery-thumbs {
-  display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-}
-
-#jj-product-page .gallery-thumb {
-  border: none;
-  padding: 0;
-  background: transparent;
-  border-radius: 10px;
-  overflow: hidden;
-  flex: 0 0 auto;
-  cursor: pointer;
-  opacity: 0.6;
-  outline: 2px solid transparent;
-}
-
-#jj-product-page .gallery-thumb img {
-  display: block;
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-}
-
-#jj-product-page .gallery-thumb.is-active,
-#jj-product-page .gallery-thumb:hover {
-  opacity: 1;
-  outline-color: #ff8800;
-}
-
-/* Brand row + price */
-#jj-product-page .summary-and-config {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-#jj-product-page .brand-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-#jj-product-page .brand-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: #f1f7ff;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #285184;
-}
-
-#jj-product-page .brand-chip-logo {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #ffefbf, #cc7c23);
-}
-
-#jj-product-page .product-price {
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: #222;
-}
-
-/* Titles */
-#jj-product-page .product-title {
-  font-size: 1.4rem;
-  line-height: 1.25;
-  margin: 0;
-}
-
-@media (min-width: 900px) {
-  #jj-product-page .product-title {
-    font-size: 1.6rem;
+  .jj-product-page .productView-details {
+    flex: 1 1 45%;
+    max-width: 45%;
   }
 }
 
-#jj-product-page .product-subtitle {
-  margin: 0.25rem 0 0.5rem;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-/* Config groups (Color, Size, etc.) */
-#jj-product-page .config-group {
-  padding: 0.75rem 0;
+/* Give the JJ blocks some breathing room */
+.jj-details-shell {
+  margin-top: 3rem;
   border-top: 1px solid #eee;
+  padding-top: 2rem;
 }
 
-#jj-product-page .config-header-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.4rem;
-  font-size: 0.85rem;
-}
-
-#jj-product-page .config-label {
-  font-weight: 600;
-}
-
-#jj-product-page .config-hint {
-  color: #888;
-}
-
-/* Pills */
-#jj-product-page .pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-#jj-product-page .pill-row--scroll {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-}
-
-#jj-product-page .pill {
-  border-radius: 999px;
-  border: 1px solid #ddd;
-  padding: 0.35rem 0.8rem;
-  background: #fff;
-  font-size: 0.85rem;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-#jj-product-page .pill.is-active {
-  border-color: #ff8800;
-  background: #fff8ea;
-  color: #b55300;
-  font-weight: 600;
-}
-
-#jj-product-page .pill:hover {
-  border-color: #ccc;
-}
-
-/* Qty row + button */
-#jj-product-page .qty-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-#jj-product-page .qty-control {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  border: 1px solid #ddd;
-  overflow: hidden;
-}
-
-#jj-product-page .qty-btn {
-  border: none;
-  background: #f3f3f3;
-  padding: 0.3rem 0.7rem;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-#jj-product-page .qty-value {
-  min-width: 2rem;
-  text-align: center;
-}
-
-#jj-product-page .btn-primary {
-  border: none;
-  border-radius: 999px;
-  background: #ff8800;
-  color: #fff;
-  padding: 0.55rem 1.4rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-#jj-product-page .btn-primary:hover {
-  background: #e46f00;
-}
-
-#jj-product-page .ship-note {
-  font-size: 0.85rem;
-  color: #777;
-}
-
-/* Rig list */
-#jj-product-page .rig-block {
-  margin-top: 1rem;
-  padding: 0.85rem;
-  border-radius: 12px;
-  background: #f9fbff;
-  border: 1px solid #e0ecff;
-}
-
-#jj-product-page .rig-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-#jj-product-page .rig-grid {
+/* JJ accordion tabs */
+.jj-tabs {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.4rem;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
 }
 
-@media (min-width: 700px) {
-  #jj-product-page .rig-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-#jj-product-page .rig-card {
-  display: flex;
-  flex-direction: column;
-  padding: 0.45rem 0.6rem;
-  border-radius: 10px;
-  background: #fff;
-  text-decoration: none;
-  color: #333;
-  font-size: 0.85rem;
+.jj-tab {
+  border-radius: 4px;
   border: 1px solid #e2e2e2;
-}
-
-#jj-product-page .rig-card strong {
-  font-size: 0.9rem;
-}
-
-/* Details / accordions */
-#jj-product-page .details-shell {
-  margin-top: 1.25rem;
-  border-top: 1px solid #eee;
-  padding-top: 1rem;
-}
-
-#jj-product-page details {
-  border-radius: 10px;
   background: #fafafa;
-  margin-bottom: 0.6rem;
-  border: 1px solid #e5e5e5;
 }
 
-#jj-product-page summary {
+.jj-tab-title {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0.55rem 0.75rem;
-  font-weight: 600;
+  list-style: none;
+}
+
+.jj-tab[open] .jj-tab-title {
+  background: #f2f2f2;
+}
+
+.jj-tab-body {
+  padding: 0.75rem 1rem 1rem;
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-#jj-product-page .details-body {
-  padding: 0 0.75rem 0.75rem;
+/* Best ways to fish it */
+.jj-fish-ways {
+  margin-top: 1rem;
+}
+
+.jj-fish-ways h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.jj-ways-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .jj-ways-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.jj-way {
+  padding: 0.75rem 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
   font-size: 0.9rem;
-  color: #555;
+  line-height: 1.4;
 }
 
-/* Sticky cart */
-#jj-product-page + .sticky-cart {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #111;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.55rem 1rem;
-  gap: 0.75rem;
+.jj-way strong {
+  display: block;
+  margin-bottom: 0.15rem;
 }
 
-#jj-product-page .sticky-cart__summary {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.85rem;
-}
-
-#jj-product-page .sticky-cart__title {
-  font-weight: 600;
-}
-
-#jj-product-page .sticky-cart__meta {
-  display: flex;
-  gap: 0.6rem;
-  font-size: 0.8rem;
-  opacity: 0.9;
-}
-
-#jj-product-page .sticky-cart__btn {
-  border-radius: 999px;
-  border: none;
-  background: #ff8800;
-  color: #fff;
-  font-weight: 600;
-  padding: 0.45rem 1.1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-#jj-product-page .sticky-cart__btn:hover {
-  background: #e46f00;
-}
-
-/* Mobile-only sticky cart: hide on wider screens */
-@media (min-width: 900px) {
-  #jj-product-page + .sticky-cart {
-    display: none;
-  }
-}
-/* === Layout / gallery overrides for desktop === */
-
-#jj-product-page {
-  /* Keep the main shell nicely centered and not too wide */
-  .page-shell {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 3rem;
-  }
-
-  /* Two-column layout on larger screens, single column on mobile */
-  .product-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: 2.5rem;
-    align-items: flex-start;
-
-    @media (max-width: 900px) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  /* Make sure the gallery column can use the full width it’s given */
-  .product-gallery {
-    width: 100%;
-  }
-
-  .gallery-main {
-    position: relative;
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    background: #000; /* acts as a “frame” behind the image */
-  }
-
-  .gallery-main img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-
-  /* Thumbnails row: scrollable on mobile, neat row on desktop */
-  .gallery-thumbs {
-    margin-top: 0.75rem;
-    display: flex;
-    gap: 0.5rem;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
-  }
-
-  .gallery-thumb img {
-    display: block;
-    width: 64px;
-    height: 64px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
+/* Light tweak so the stock description tabs don’t bump into JJ stuff */
+.productView + .jj-details-shell + .product-tabs {
+  margin-top: 2.5rem;
 }
