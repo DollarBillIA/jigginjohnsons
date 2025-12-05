@@ -1,5 +1,5 @@
 // JJ PRODUCT LAYOUT OVERRIDES
-// Scoped to the JJ wrapper so other products stay stock.
+// These are safe even if the wrapper class isn't present yet.
 
 .jj-product-page {
   margin-top: 2rem;
@@ -39,7 +39,7 @@
   }
 }
 
-/* Give the JJ blocks some breathing room */
+/* JJ “details shell” spacer (if/when we reintroduce it) */
 .jj-details-shell {
   margin-top: 3rem;
   border-top: 1px solid #eee;
@@ -112,26 +112,23 @@
   margin-bottom: 0.15rem;
 }
 
-/* Light tweak so the stock description tabs don’t bump into JJ stuff */
+/* Slight nudge between JJ details and stock product tabs */
 .productView + .jj-details-shell + .product-tabs {
   margin-top: 2.5rem;
 }
 
 /* ---------------------------------------------------
-   SWATCH ROWS → SINGLE-LINE HORIZONTAL SCROLL
+   GLOBAL SWATCH ROWS → SINGLE-LINE HORIZONTAL SCROLL
+   Applies to ANY BigCommerce swatch control.
    --------------------------------------------------- */
 
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"] {
+/* The form-field that represents a swatch option group */
+.form-field[data-product-attribute="swatch"] {
   margin-bottom: 1.25rem;
 }
 
 /* Horizontal scrolling container */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-field-control {
+.form-field[data-product-attribute="swatch"] .form-field-control {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -141,10 +138,7 @@
 }
 
 /* Each swatch tile is fixed to 65px square */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option {
+.form-field[data-product-attribute="swatch"] .form-option {
   flex: 0 0 65px;
   width: 65px;
   height: 65px;
@@ -156,55 +150,34 @@
   position: relative;
 }
 
-/* Force swatch image to fill the tile */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option .form-option-swatch {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-/* Roots usually wraps the content in form-option-variant */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option .form-option-variant {
+/* Make sure the clickable label area fills the tile */
+.form-field[data-product-attribute="swatch"] .form-option-variant,
+.form-field[data-product-attribute="swatch"] .form-option-swatch {
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
+  border-radius: 4px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 /* The <img> tag gets forced to fit the tile */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option img {
+.form-field[data-product-attribute="swatch"] img {
   width: 100%;
   height: 100%;
   object-fit: contain; /* use 'cover' if you want full-bleed */
 }
 
 /* ACTIVE state ring */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option.is-active {
+.form-field[data-product-attribute="swatch"] .form-option.is-active {
   outline: 2px solid #ffb200;
   outline-offset: 2px;
 }
 
 /* Hover state */
-.jj-product-page
-  .productView-options-inner
-  .form-field[data-product-attribute="swatch"]
-  .form-option:hover {
+.form-field[data-product-attribute="swatch"] .form-option:hover {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
 }
