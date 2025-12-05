@@ -26,10 +26,10 @@ product:
     <div class="product-layout">
 
       {{!-- =========================
-           GALLERY – single image + arrows
+           GALLERY – BC product images + arrows
            (arrows drive COLOR radios)
       ========================== --}}
-      <section class="product-gallery" aria-label="Product image">
+      <section class="product-gallery" aria-label="Product images">
         <div class="gallery-main">
           <button
             class="img-arrow img-arrow--left"
@@ -39,19 +39,10 @@ product:
             &#8249;
           </button>
 
-          {{#if product.main_image}}
-            <img
-              id="jj-main-image"
-              src="{{getImage product.main_image 'product_size'}}"
-              alt="{{product.main_image.alt}}"
-            />
-          {{else}}
-            <img
-              id="jj-main-image"
-              src="https://via.placeholder.com/900x675/ffffff/000000?text=No+Image"
-              alt="{{product.title}}"
-            />
-          {{/if}}
+          {{!-- Standard Roots gallery markup so BC JS can control images --}}
+          <div class="productView-images" data-image-gallery>
+            {{> components/products/product-images}}
+          </div>
 
           <button
             class="img-arrow img-arrow--right"
@@ -77,7 +68,7 @@ product:
           </div>
           {{/if}}
 
-          {{!-- Updated so BigCommerce JS can update price on option change --}}
+          {{!-- BC JS price target --}}
           <div class="productView-price product-price" data-product-price>
             {{> components/products/price price=product.price}}
           </div>
