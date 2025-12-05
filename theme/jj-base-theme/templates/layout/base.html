@@ -87,9 +87,8 @@
             }
         </script>
 
-        {{!-- Theme bundle must load first, then JJ product script --}}
+        {{!-- Theme bundle includes jj-product.js and boots the page --}}
         <script nonce="{{nonce}}" defer src="{{cdn 'assets/dist/theme-bundle.main.js'}}" onload="onThemeBundleMain()"></script>
-        <script nonce="{{nonce}}" defer src="{{cdn 'assets/dist/jj-product.js'}}"></script>
 
         {{{footer.scripts}}}
     </body>
