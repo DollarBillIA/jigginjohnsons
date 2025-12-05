@@ -1,258 +1,243 @@
-(function () {
-  function forEachNode(list, fn) {
-    Array.prototype.forEach.call(list, fn);
+;(function () {
+  var page = document.getElementById('jj-product-page');
+  if (!page) return;
+
+  function forEachNode(list, cb) {
+    if (!list) return;
+    for (var i = 0; i < list.length; i++) {
+      cb(list[i], i);
+    }
   }
 
-  function initJJProductPage() {
-    var page = document.getElementById('jj-product-page');
-    if (!page) {
-      return;
+  function closest(el, selector) {
+    while (el && el !== document) {
+      if (el.matches && el.matches(selector)) return el;
+      el = el.parentNode;
     }
+    return null;
+  }
 
-    /* ============================
-       GALLERY BEHAVIOR
-    ============================ */
-    var mainImage = document.getElementById('jj-main-image');
-    var thumbButtons = page.querySelectorAll('.gallery-thumb');
-    var arrowButtons = page.querySelectorAll('.img-arrow');
-    var totalImages = thumbButtons.length;
-    var currentIndex = 0;
+  var form = page.querySelector('#jj-product-form');
+  var qtyDisplay = page.querySelector('#jj-qty-display');
+  var qtyInput = page.querySelector('#jj-qty-input');
+  var stickyVariantEl = page.querySelector('.sticky-cart__variant');
+  var stickyAddBtn = page.querySelector('#jj-add-to-cart-sticky');
+  var mainAddBtn = page.querySelector('#jj-add-to-cart-main');
 
-    function setActiveImage(index) {
-      if (!mainImage || totalImages === 0) {
-        return;
-      }
-      if (index < 0) {
-        index = totalImages - 1;
-      }
-      if (index >= totalImages) {
-        index = 0;
-      }
-      currentIndex = index;
+  var optionGroups = page.querySelectorAll('.config-group');
+  var optionRadios = page.querySelectorAll('.jj-option-radio');
 
-      var activeThumb = page.querySelector(
-        '.gallery-thumb[data-image-index="' + index + '"]'
-      );
-      if (activeThumb) {
-        var src = activeThumb.getAttribute('data-src');
-        var imgEl = activeThumb.querySelector('img');
-        var alt = imgEl ? imgEl.getAttribute('alt') : mainImage.alt;
+  /* ============================
+     QTY CONTROLS
+  ============================ */
+  var qtyButtons = page.querySelectorAll('.qty-btn[data-qty-change]');
 
-        if (src) {
-          mainImage.src = src;
-        }
-        if (alt) {
-          mainImage.alt = alt;
-        }
-      }
+  function setQty(newQty) {
+    var q = parseInt(newQty, 10);
+    if (isNaN(q) || q < 1) q = 1;
+    if (q > 99) q = 99;
+    if (qtyDisplay) qtyDisplay.textContent = String(q);
+    if (qtyInput) qtyInput.value = String(q);
+  }
 
-      forEachNode(thumbButtons, function (btn) {
-        btn.classList.remove('is-active');
-      });
-      if (activeThumb) {
-        activeThumb.classList.add('is-active');
-      }
-    }
-
-    forEachNode(thumbButtons, function (btn) {
-      btn.addEventListener('click', function () {
-        var idx = parseInt(btn.getAttribute('data-image-index'), 10);
-        if (!isNaN(idx)) {
-          setActiveImage(idx);
-        }
-      });
+  forEachNode(qtyButtons, function (btn) {
+    btn.addEventListener('click', function () {
+      var delta = parseInt(btn.getAttribute('data-qty-change'), 10) || 0;
+      var current = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+      setQty(current + delta);
     });
+  });
 
-    forEachNode(arrowButtons, function (btn) {
-      btn.addEventListener('click', function () {
-        var dir = btn.getAttribute('data-direction');
-        if (dir === 'prev') {
-          setActiveImage(currentIndex - 1);
-        } else if (dir === 'next') {
-          setActiveImage(currentIndex + 1);
-        }
-      });
-    });
+  /* ============================
+     STICKY VARIANT TEXT
+  ============================ */
+  function updateStickyVariant() {
+    if (!stickyVariantEl) return;
 
-    /* ============================
-       OPTION PILLS → HIDDEN INPUTS
-    ============================ */
-    var optionPills = page.querySelectorAll('.pill[data-option-id]');
-    var stickyVariantEl = page.querySelector('.sticky-cart__variant');
+    var selectedLabels = [];
 
-    function updateStickyVariant() {
-      if (!stickyVariantEl) return;
+    forEachNode(optionGroups, function (group) {
+      var checked = group.querySelector('.jj-option-radio:checked');
+      if (checked) {
+        var labelNode =
+          page.querySelector(
+            'label[for="' + checked.id + '"] .pill-label'
+          ) ||
+          page.querySelector('label[for="' + checked.id + '"]');
 
-      var selectedLabels = [];
-      var groups = page.querySelectorAll('.config-group');
-
-      forEachNode(groups, function (group) {
-        var active = group.querySelector('.pill.is-active');
-        if (active) {
-          var text = active.textContent || active.innerText;
+        if (labelNode) {
+          var text = labelNode.textContent || labelNode.innerText;
           if (text) {
             selectedLabels.push(text.replace(/\s+/g, ' ').trim());
           }
         }
-      });
-
-      if (selectedLabels.length) {
-        stickyVariantEl.textContent = selectedLabels.join(' • ');
-      } else {
-        stickyVariantEl.textContent = 'Select options';
       }
+    });
+
+    if (selectedLabels.length) {
+      stickyVariantEl.textContent = selectedLabels.join(' • ');
+    } else {
+      stickyVariantEl.textContent = 'Select options';
     }
+  }
 
-    forEachNode(optionPills, function (pill) {
-      pill.addEventListener('click', function () {
-        var optionId = pill.getAttribute('data-option-id');
-        var valueId = pill.getAttribute('data-value-id');
-        if (!optionId || !valueId) return;
+  /* ============================
+     PILL ↔ RADIO SYNC
+  ============================ */
+  forEachNode(optionRadios, function (radio) {
+    radio.addEventListener('change', function () {
+      var group = closest(radio, '.config-group');
+      if (group) {
+        var radiosInGroup = group.querySelectorAll('.jj-option-radio');
+        forEachNode(radiosInGroup, function (r) {
+          var label = page.querySelector('label[for="' + r.id + '"]');
+          if (label) {
+            if (r.checked) {
+              label.classList.add('is-active');
+            } else {
+              label.classList.remove('is-active');
+            }
+          }
+        });
+      }
 
-        var group = pill.closest('.config-group');
-        if (group) {
-          var siblings = group.querySelectorAll('.pill');
-          forEachNode(siblings, function (sib) {
-            sib.classList.remove('is-active');
-          });
+      updateStickyVariant();
+    });
+  });
+
+  // Initialize pill active states & sticky summary
+  (function initOptions() {
+    forEachNode(optionGroups, function (group) {
+      var radiosInGroup = group.querySelectorAll('.jj-option-radio');
+      forEachNode(radiosInGroup, function (r) {
+        var label = page.querySelector('label[for="' + r.id + '"]');
+        if (label) {
+          if (r.checked) {
+            label.classList.add('is-active');
+          } else {
+            label.classList.remove('is-active');
+          }
         }
-        pill.classList.add('is-active');
-
-        var selector =
-          'input.jj-option-input[name="attribute[' +
-          optionId +
-          ']"][value="' +
-          valueId +
-          '"]';
-        var input = page.querySelector(selector);
-        if (input) {
-          input.checked = true;
-        }
-
-        updateStickyVariant();
       });
     });
 
     updateStickyVariant();
+  })();
 
-    /* ============================
-       QUANTITY CONTROLS
-    ============================ */
-    var qtyDisplay = document.getElementById('jj-qty-display');
-    var qtyInput = document.getElementById('jj-qty-input');
-    var qtyButtons = page.querySelectorAll('.qty-btn');
+  /* ============================
+     GALLERY ARROWS → COLOR OPTION
+     (assumes first option group = color)
+  ============================ */
+  var arrows = page.querySelectorAll('.img-arrow');
+  var colorGroup = optionGroups.length ? optionGroups[0] : null;
+  var colorRadios = colorGroup
+    ? colorGroup.querySelectorAll('.jj-option-radio')
+    : [];
 
-    function setQty(newQty) {
-      var qty = parseInt(newQty, 10);
-      if (isNaN(qty) || qty < 1) {
-        qty = 1;
+  function getCurrentColorIndex() {
+    var idx = 0;
+    forEachNode(colorRadios, function (radio, i) {
+      if (radio.checked) {
+        idx = i;
       }
-      if (qtyDisplay) {
-        qtyDisplay.textContent = qty;
-      }
-      if (qtyInput) {
-        qtyInput.value = qty;
-      }
-    }
-
-    forEachNode(qtyButtons, function (btn) {
-      btn.addEventListener('click', function () {
-        var delta = parseInt(btn.getAttribute('data-qty-change'), 10) || 0;
-        var current = parseInt(qtyInput ? qtyInput.value : '1', 10) || 1;
-        setQty(current + delta);
-      });
     });
-
-    /* ============================
-       AJAX ADD TO CART
-    ============================ */
-    var form = document.getElementById('jj-product-form');
-    var mainButton = document.getElementById('jj-add-to-cart-main');
-    var stickyButton = document.getElementById('jj-add-to-cart-sticky');
-
-    function setSubmitting(isSubmitting) {
-      if (!mainButton || !stickyButton) return;
-      if (isSubmitting) {
-        mainButton.disabled = true;
-        stickyButton.disabled = true;
-        mainButton.textContent = 'Adding...';
-        stickyButton.textContent = 'Adding...';
-      } else {
-        mainButton.disabled = false;
-        stickyButton.disabled = false;
-        mainButton.textContent = 'Add to Cart';
-        stickyButton.textContent = 'Add to Cart';
-      }
-    }
-
-    function showSuccess() {
-      if (!mainButton || !stickyButton) return;
-      mainButton.textContent = 'Added!';
-      stickyButton.textContent = 'Added!';
-      setTimeout(function () {
-        mainButton.textContent = 'Add to Cart';
-        stickyButton.textContent = 'Add to Cart';
-      }, 2000);
-    }
-
-    function showError() {
-      if (!mainButton || !stickyButton) return;
-      mainButton.textContent = 'Error';
-      stickyButton.textContent = 'Error';
-      setTimeout(function () {
-        mainButton.textContent = 'Add to Cart';
-        stickyButton.textContent = 'Add to Cart';
-      }, 3000);
-    }
-
-    if (form) {
-      form.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        if (!window.fetch || !window.FormData) {
-          // Fallback: normal submit if fetch not supported
-          form.submit();
-          return;
-        }
-
-        setSubmitting(true);
-
-        var formData = new FormData(form);
-
-        fetch(form.action, {
-          method: 'POST',
-          body: formData,
-          credentials: 'same-origin'
-        })
-          .then(function (response) {
-            // We don't need the HTML cart page; just assume success if 2xx/3xx.
-            if (!response.ok && response.status !== 302) {
-              throw new Error('Cart error');
-            }
-            showSuccess();
-          })
-          .catch(function () {
-            showError();
-          })
-          .finally(function () {
-            setSubmitting(false);
-          });
-      });
-    }
-
-    if (stickyButton && form) {
-      stickyButton.addEventListener('click', function (event) {
-        event.preventDefault();
-        // trigger the same AJAX submit logic
-        var submitEvent = new Event('submit', { cancelable: true });
-        form.dispatchEvent(submitEvent);
-      });
-    }
+    return idx;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initJJProductPage);
-  } else {
-    initJJProductPage();
+  function setColorIndex(newIndex) {
+    if (!colorRadios.length) return;
+
+    var len = colorRadios.length;
+    var idx = newIndex;
+
+    if (idx < 0) idx = len - 1;
+    if (idx >= len) idx = 0;
+
+    forEachNode(colorRadios, function (radio, i) {
+      var label = page.querySelector('label[for="' + radio.id + '"]');
+
+      if (i === idx) {
+        if (!radio.checked) {
+          radio.checked = true;
+
+          var evt = document.createEvent('HTMLEvents');
+          evt.initEvent('change', true, false);
+          radio.dispatchEvent(evt);
+        }
+        if (label) label.classList.add('is-active');
+      } else {
+        if (label) label.classList.remove('is-active');
+      }
+    });
+  }
+
+  forEachNode(arrows, function (arrow) {
+    arrow.addEventListener('click', function () {
+      if (!colorRadios.length) return;
+
+      var current = getCurrentColorIndex();
+      var next =
+        arrow.classList.contains('img-arrow--right') ? current + 1 : current - 1;
+      setColorIndex(next);
+    });
+  });
+
+  /* ============================
+     STICKY ADD-TO-CART
+  ============================ */
+  if (stickyAddBtn && form) {
+    stickyAddBtn.addEventListener('click', function () {
+      if (form.requestSubmit) {
+        form.requestSubmit();
+      } else {
+        form.submit();
+      }
+    });
+  }
+
+  /* ============================
+     MAIN FORM SUBMIT → AJAX
+     (stay on page, basic feedback)
+  ============================ */
+  if (form) {
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      if (!window.fetch) {
+        // Fallback: regular submit
+        form.submit();
+        return;
+      }
+
+      if (mainAddBtn) {
+        mainAddBtn.disabled = true;
+        mainAddBtn.textContent = 'Adding...';
+      }
+
+      var formData = new FormData(form);
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin',
+      })
+        .then(function () {
+          if (mainAddBtn) {
+            mainAddBtn.textContent = 'Added!';
+          }
+          setTimeout(function () {
+            if (mainAddBtn) {
+              mainAddBtn.disabled = false;
+              mainAddBtn.textContent = 'Add to Cart';
+            }
+          }, 2000);
+        })
+        .catch(function () {
+          if (mainAddBtn) {
+            mainAddBtn.disabled = false;
+            mainAddBtn.textContent = 'Add to Cart';
+          }
+        });
+    });
   }
 })();

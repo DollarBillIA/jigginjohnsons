@@ -21,53 +21,39 @@ product:
     <div class="product-layout">
 
       {{!-- =========================
-           GALLERY (real images)
+           GALLERY – single image with arrows that step color
       ========================== --}}
-      <section class="product-gallery" aria-label="Product images">
+      <section class="product-gallery" aria-label="Product image">
         <div class="gallery-main">
-          <button class="img-arrow img-arrow--left" type="button" data-direction="prev" aria-label="Previous image">&#8249;</button>
+          <button
+            class="img-arrow img-arrow--left"
+            type="button"
+            aria-label="Previous color"
+          >
+            &#8249;
+          </button>
 
           {{#if product.main_image}}
             <img
               id="jj-main-image"
-              src="{{getImage product.main_image 'zoom'}}"
+              src="{{getImage product.main_image 'product_size'}}"
               alt="{{product.main_image.alt}}"
-              data-image-index="0"
             />
           {{else}}
             <img
               id="jj-main-image"
               src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=No+Image"
               alt="{{product.title}}"
-              data-image-index="0"
             />
           {{/if}}
 
-          <button class="img-arrow img-arrow--right" type="button" data-direction="next" aria-label="Next image">&#8250;</button>
-        </div>
-
-        <div class="gallery-thumbs" aria-label="Thumbnails">
-          {{#if product.images}}
-            {{#each product.images}}
-              <button
-                class="gallery-thumb{{#if @first}} is-active{{/if}}"
-                type="button"
-                data-image-index="{{@index}}"
-                data-src="{{getImage this 'zoom'}}"
-              >
-                <img src="{{getImage this 'thumb'}}" alt="{{this.alt}}">
-              </button>
-            {{/each}}
-          {{else}}
-            <button
-              class="gallery-thumb is-active"
-              type="button"
-              data-image-index="0"
-              data-src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=No+Image"
-            >
-              <img src="https://via.placeholder.com/140x140/3b6c94/ffffff?text=No+Image" alt="No image">
-            </button>
-          {{/if}}
+          <button
+            class="img-arrow img-arrow--right"
+            type="button"
+            aria-label="Next color"
+          >
+            &#8250;
+          </button>
         </div>
       </section>
 
@@ -76,7 +62,7 @@ product:
       ========================== --}}
       <section class="summary-and-config">
 
-        {{!-- Brand + price + title + summary --}}
+        {{!-- Brand + price --}}
         <div class="brand-row">
           {{#if product.brand}}
           <div class="brand-chip">
@@ -102,6 +88,7 @@ product:
 
         {{!-- =========================
              ADD TO CART FORM
+             (no data-cart-item-add → JJ handles submit)
         ========================== --}}
         <form
           id="jj-product-form"
@@ -114,10 +101,17 @@ product:
           <input type="hidden" name="product_id" value="{{product.id}}">
           <input type="hidden" id="jj-qty-input" name="qty[]" value="1">
 
-          {{!-- Options → pills, replacing native UI --}}
+          {{!-- =========================
+               OPTIONS → BC radios + JJ pills
+          ========================== --}}
           {{#if product.options}}
             {{#each product.options}}
-              <div class="config-group" data-option-id="{{id}}">
+              <div
+                class="config-group"
+                data-option-id="{{id}}"
+                data-product-attribute="set-rectangle"
+                data-product-attribute-id="{{id}}"
+              >
                 <div class="config-header-row">
                   <span class="config-label">{{display_name}}</span>
                   {{#if required}}
@@ -127,35 +121,56 @@ product:
 
                 <div class="pill-row pill-row--scroll">
                   {{#each values}}
-                    <button
-                      class="pill{{#if selected}} is-active{{/if}}"
-                      type="button"
-                      data-option-id="{{../id}}"
-                      data-value-id="{{id}}"
-                    >
-                      {{label}}
-                    </button>
-
+                    {{!-- REAL BigCommerce input --}}
                     <input
+                      class="jj-option-radio"
                       type="radio"
-                      class="jj-option-input"
+                      id="attribute_{{../id}}_{{id}}"
                       name="attribute[{{../id}}]"
                       value="{{id}}"
                       {{#if selected}}checked{{/if}}
-                      hidden
+                      data-product-attribute="input"
+                      data-product-option-change
                     >
+
+                    {{!-- JJ pill UI = label for the radio --}}
+                    <label
+                      class="pill{{#if selected}} is-active{{/if}}"
+                      for="attribute_{{../id}}_{{id}}"
+                      data-option-id="{{../id}}"
+                      data-value-id="{{id}}"
+                    >
+                      {{!-- later we can drop swatch images in here --}}
+                      <span class="pill-label">{{label}}</span>
+                    </label>
                   {{/each}}
                 </div>
               </div>
             {{/each}}
           {{/if}}
 
-          {{!-- QTY + primary add-to-cart --}}
+          {{!-- =========================
+               QTY + primary add-to-cart
+          ========================== --}}
           <div class="qty-row">
             <div class="qty-control">
-              <button class="qty-btn" type="button" data-qty-change="-1" aria-label="Decrease quantity">−</button>
+              <button
+                class="qty-btn"
+                type="button"
+                data-qty-change="-1"
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
               <span class="qty-value" id="jj-qty-display">1</span>
-              <button class="qty-btn" type="button" data-qty-change="1" aria-label="Increase quantity">+</button>
+              <button
+                class="qty-btn"
+                type="button"
+                data-qty-change="1"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
             </div>
 
             <button class="btn-primary" type="submit" id="jj-add-to-cart-main">
@@ -168,7 +183,7 @@ product:
           </p>
         </form>
 
-        {{!-- Best ways to fish it (static for now) --}}
+        {{!-- Best ways to fish it (static demo for now) --}}
         <div class="rig-block">
           <div class="rig-title">Best ways to fish it (demo)</div>
           <div class="rig-grid">
@@ -231,7 +246,7 @@ product:
   </article>
 </main>
 
-{{!-- STICKY MOBILE CART (AJAX-triggered) --}}
+{{!-- STICKY MOBILE CART --}}
 <section class="sticky-cart" aria-label="Quick add to cart">
   <div class="sticky-cart__summary">
     <div class="sticky-cart__title">{{product.title}}</div>
