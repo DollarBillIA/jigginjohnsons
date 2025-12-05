@@ -9,295 +9,131 @@ product:
     similar_by_views:
         limit: {{theme_settings.productpage_similar_by_views_count}}
 ---
+{{inject 'productId' product.id}}
 
 {{#partial "page"}}
+    <div class="container">
+        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
 
-<main class="page-shell" id="jj-product-page">
-  <nav class="breadcrumbs" aria-label="Breadcrumb">
-    {{> components/common/breadcrumbs}}
-  </nav>
-
-  {{!-- Make this look like a normal productView to BigCommerce --}}
-  <article
-    class="product-card productView"
-    data-product-view
-    data-product-id="{{product.id}}"
-  >
-    <div class="product-layout">
-
-      {{!-- =========================
-           GALLERY – Cornerstone-style
-           (respects variant images)
-      ========================== --}}
-      <section class="product-gallery productView-images" data-image-gallery>
-
-        {{#if product.images.length '>' 1}}
-          {{> components/carousel-content-announcement}}
-        {{/if}}
-
-        <figure
-          class="productView-image"
-          data-image-gallery-main
-          {{#if product.main_image}}
-            data-zoom-image="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size }}"
-          {{/if}}
-        >
-          <div class="productView-img-container">
-            {{#if product.main_image}}
-              <a
-                href="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size}}"
-                target="_blank"{{#if schema}} itemprop="image"{{/if}}
-              >
-            {{/if}}
-
-            {{> components/common/responsive-img
-                image=product.main_image
-                class="productView-image--default"
-                fallback_size=theme_settings.product_size
-                lazyload=theme_settings.lazyload_mode
-                default_image=theme_settings.default_image_product
-                otherAttributes="data-main-image"
-            }}
-
-            {{#if product.main_image}}
-              </a>
-            {{/if}}
-          </div>
-        </figure>
-
-        <ul
-          class="productView-thumbnails"
-          {{#gt product.images.length 5}}
-            data-slick='{
-              "infinite": false,
-              "mobileFirst": true,
-              "dots": false,
-              "accessibility": false,
-              "slidesToShow": 5,
-              "slidesToScroll": 5
-            }'
-          {{/gt}}
-        >
-          {{#each product.images}}
-            <li class="productView-thumbnail">
-              <a
-                class="productView-thumbnail-link"
-                href="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}"
-                data-image-gallery-item
-                data-image-gallery-new-image-url="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.product_size}}"
-                data-image-gallery-new-image-srcset="{{getImageSrcset this use_default_sizes=true}}"
-                data-image-gallery-zoom-image-url="{{getImageSrcset this (cdn ../theme_settings.default_image_product) 1x=../theme_settings.zoom_size}}"
-              >
-                {{> components/common/responsive-img
-                    image=this
-                    fallback_size=../theme_settings.productview_thumb_size
-                    lazyload=../theme_settings.lazyload_mode
-                }}
-              </a>
-            </li>
-          {{/each}}
-        </ul>
-      </section>
-
-      {{!-- =========================
-           SUMMARY + CONFIG
-      ========================== --}}
-      <section class="summary-and-config">
-
-        {{!-- Brand + price --}}
-        <div class="brand-row">
-          {{#if product.brand}}
-            <div class="brand-chip">
-              <span class="brand-chip-logo" aria-hidden="true"></span>
-              <a href="{{product.brand.url}}">{{product.brand.name}}</a>
-            </div>
-          {{/if}}
-
-          <div class="product-price" data-product-price>
-            {{> components/products/price price=product.price}}
-          </div>
-        </div>
-
-        <h1 class="product-title">
-          {{product.title}}
-        </h1>
-
-        {{#if product.summary}}
-          <p class="product-subtitle">
-            {{{product.summary}}}
-          </p>
-        {{/if}}
-
-        {{!-- =========================
-             ADD TO CART FORM
-             Let BigCommerce JS own it
-        ========================== --}}
-        <form
-          id="jj-product-form"
-          class="jj-product-form"
-          method="post"
-          action="{{product.add_to_cart_url}}"
-          enctype="multipart/form-data"
-          data-cart-item-add
-        >
-          <input type="hidden" name="action" value="add">
-          <input type="hidden" name="product_id" value="{{product.id}}">
-          <input type="hidden" id="jj-qty-input" name="qty[]" value="1">
-
-          {{!-- OPTIONS → BC radios + JJ pills --}}
-          {{#if product.options}}
-            {{#each product.options}}
-              <div
-                class="config-group"
-                data-option-id="{{id}}"
-                data-product-attribute="set-rectangle"
-                data-product-attribute-id="{{id}}"
-              >
-                <div class="config-header-row">
-                  <span class="config-label">{{display_name}}</span>
-                  {{#if required}}
-                    <span class="config-required" aria-hidden="true">*</span>
-                  {{/if}}
-                </div>
-
-                <div class="pill-row pill-row--scroll">
-                  {{#each values}}
-                    {{!-- Real BC input --}}
-                    <input
-                      class="jj-option-radio"
-                      type="radio"
-                      id="attribute_{{../id}}_{{id}}"
-                      name="attribute[{{../id}}]"
-                      value="{{id}}"
-                      {{#if selected}}checked{{/if}}
-                      data-product-attribute="input"
-                      data-product-option-change
-                    >
-
-                    {{!-- JJ pill UI = label for radio --}}
-                    <label
-                      class="pill{{#if selected}} is-active{{/if}}"
-                      for="attribute_{{../id}}_{{id}}"
-                      data-option-id="{{../id}}"
-                      data-value-id="{{id}}"
-                    >
-                      <span class="pill-label">{{label}}</span>
-                    </label>
-                  {{/each}}
-                </div>
-              </div>
-            {{/each}}
-          {{/if}}
-
-          {{!-- QTY + primary add-to-cart --}}
-          <div class="qty-row">
-            <div class="qty-control">
-              <button
-                class="qty-btn"
-                type="button"
-                data-qty-change="-1"
-                aria-label="Decrease quantity"
-              >
-                −
-              </button>
-              <span class="qty-value" id="jj-qty-display">1</span>
-              <button
-                class="qty-btn"
-                type="button"
-                data-qty-change="1"
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-            </div>
-
-            <button class="btn-primary" type="submit" id="jj-add-to-cart-main">
-              Add to Cart
-            </button>
-          </div>
-
-          <p class="ship-note">
-            Demo text: real availability/shipping messaging for Jiggin’ Johnson’s will go here.
-          </p>
-        </form>
-
-        {{!-- Best ways to fish it (demo) --}}
-        <div class="rig-block">
-          <div class="rig-title">Best ways to fish it (demo)</div>
-          <div class="rig-grid">
-            <div class="rig-card">
-              <strong>Swim Jig Trailer</strong>
-              <span>Shallow grass, slow roll</span>
-            </div>
-            <div class="rig-card">
-              <strong>Texas Rig</strong>
-              <span>Pitching to cover</span>
-            </div>
-            <div class="rig-card">
-              <strong>Ball Jig Head</strong>
-              <span>Dragging sand or rock</span>
-            </div>
-            <div class="rig-card">
-              <strong>Split Shot</strong>
-              <span>Natural subtle glides</span>
-            </div>
-          </div>
-        </div>
-
-      </section>
+        {{#each product.shipping_messages}}
+            {{> components/common/alert/alert-info message}}
+        {{/each}}
     </div>
 
-    {{!-- DETAILS / ACCORDIONS --}}
-    <section class="details-shell" aria-label="Details and specs">
-      <details open>
-        <summary>On-the-water overview (demo copy)</summary>
-        <div class="details-body">
-          <p>
-            This is placeholder text for Jiggin’ Johnson’s new template shell. Once we’re happy with
-            the layout and behavior, we’ll plug in real product descriptions, rigging tips, and
-            JJ-specific language.
-          </p>
-        </div>
-      </details>
+    <div>
+        <div class="container jj-product-page">
+            {{!-- Standard Roots product view: images, options, price, add-to-cart --}}
+            {{> components/products/product-view}}
 
-      <details>
-        <summary>Specs &amp; build (demo copy)</summary>
-        <div class="details-body">
-          <p>• Length: sample 2.5" – 3.0"</p>
-          <p>• Profile: compact, multi-species soft plastic</p>
-          <p>• Material / scent: we’ll customize this per bait</p>
-        </div>
-      </details>
+            {{{region name="product_below_content"}}}
 
-      <details>
-        <summary>Care &amp; storage (demo copy)</summary>
-        <div class="details-body">
-          <p>
-            Store flat in the original bag to preserve shape. Keep dark colors separate to avoid
-            bleeding. Compatible with most standard gel scents.
-          </p>
-        </div>
-      </details>
-    </section>
-  </article>
-</main>
+            {{!-- =========================
+                 JJ DETAILS / ACCORDIONS
+            ========================== --}}
+            <section class="jj-details-shell" aria-label="Details and specs">
+                <div class="jj-tabs">
 
-{{!-- STICKY MOBILE CART --}}
-<section class="sticky-cart" aria-label="Quick add to cart">
-  <div class="sticky-cart__summary">
-    <div class="sticky-cart__title">{{product.title}}</div>
-    <div class="sticky-cart__meta">
-      <span class="sticky-cart__variant">Select options</span>
-      <span class="sticky-cart__price" data-product-price>
-        {{> components/products/price price=product.price}}
-      </span>
+                    <details class="jj-tab" open>
+                        <summary class="jj-tab-title">On-the-water overview (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            This is placeholder text for Jiggin’ Johnson’s new template shell.
+                            Once we’re happy with the layout and behavior, we’ll plug in real product
+                            descriptions, rigging tips, and JJ-specific language.
+                        </div>
+                    </details>
+
+                    <details class="jj-tab">
+                        <summary class="jj-tab-title">Specs &amp; build (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            Specs &amp; build (demo copy)
+                        </div>
+                    </details>
+
+                    <details class="jj-tab">
+                        <summary class="jj-tab-title">Care &amp; storage (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            Care &amp; storage (demo copy)
+                        </div>
+                    </details>
+
+                </div>
+
+                {{!-- =========================
+                     BEST WAYS TO FISH IT (DEMO)
+                ========================== --}}
+                <section class="jj-fish-ways">
+                    <h3>Best ways to fish it (demo)</h3>
+
+                    <div class="jj-ways-grid">
+
+                        <div class="jj-way">
+                            <strong>Swim Jig Trailer</strong>
+                            <span>Shallow grass, slow roll</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Texas Rig</strong>
+                            <span>Pitching to cover</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Ball Jig Head</strong>
+                            <span>Dragging sand or rock</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Split Shot</strong>
+                            <span>Natural subtle glides</span>
+                        </div>
+
+                    </div>
+                </section>
+            </section>
+        </div>
+
+        {{!-- Keep normal tabs / related / similar / reviews from Roots --}}
+        {{> components/products/tabs schema=true }}
+
+        {{#if product.related_products}}
+            {{#unless theme_settings.related_products_tab}}
+                <div id="tab-related">
+                    <div class="grid-bg">
+                        <div class="container">
+                            <h3 class="main-heading uppercase center"><strong>{{lang 'products.related_products'}}</strong></h3>
+                            {{#if settings.data_tag_enabled}}
+                                {{> components/products/related products=product.related_products columns=6 list="Related Products"}}
+                            {{else}}
+                                {{> components/products/related products=product.related_products columns=6}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            {{/unless}}
+        {{/if}}
+        
+        {{#if product.similar_by_views}}
+            {{#unless theme_settings.customer_viewed_products_tab}}
+                <div id="tab-related">
+                    <div class="grid-bg">
+                        <div class="container">
+                            <h3 class="main-heading uppercase center"><strong>{{lang 'products.similar_by_views'}}</strong></h3>
+                            {{> components/products/similar-by-views products=product.similar_by_views columns=6}}
+                        </div>
+                    </div>
+                </div>
+            {{/unless}}
+        {{/if}}
+        
+        {{#if settings.show_product_reviews}}
+            {{#gt product.reviews.total 0}}
+                <div class="container">
+                    <h3 class="main-heading uppercase" id="reviews-accordion">Reviews</h3>
+                    {{> components/products/reviews reviews=product.reviews product=product urls=urls}}
+                </div>
+            {{/gt}}
+        {{/if}}
     </div>
-  </div>
-  <button class="sticky-cart__btn" type="button" id="jj-add-to-cart-sticky">
-    Add to Cart
-  </button>
-</section>
 
+    {{> components/products/schema}}
 {{/partial}}
-
 {{> layout/base}}
