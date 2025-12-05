@@ -77,7 +77,8 @@ product:
           </div>
           {{/if}}
 
-          <div class="product-price">
+          {{!-- Updated so BigCommerce JS can update price on option change --}}
+          <div class="productView-price product-price" data-product-price>
             {{> components/products/price price=product.price}}
           </div>
         </div>
