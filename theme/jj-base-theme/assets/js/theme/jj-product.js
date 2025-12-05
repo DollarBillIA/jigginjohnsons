@@ -105,7 +105,7 @@
     });
   });
 
-  // Initialize pill active states & sticky summary
+  // Initial pill states and sticky summary
   (function initOptions() {
     forEachNode(optionGroups, function (group) {
       var radiosInGroup = group.querySelectorAll('.jj-option-radio');
@@ -126,7 +126,7 @@
 
   /* ============================
      GALLERY ARROWS → COLOR OPTION
-     (assumes first option group = color)
+     (assumes first option group is color)
   ============================ */
   var arrows = page.querySelectorAll('.img-arrow');
   var colorGroup = optionGroups.length ? optionGroups[0] : null;
@@ -160,6 +160,8 @@
         if (!radio.checked) {
           radio.checked = true;
 
+          // Fire a change event so BigCommerce product.js
+          // can update price, availability, etc.
           var evt = document.createEvent('HTMLEvents');
           evt.initEvent('change', true, false);
           radio.dispatchEvent(evt);
@@ -184,60 +186,14 @@
 
   /* ============================
      STICKY ADD-TO-CART
+     (delegate to main button so BC JS handles form)
   ============================ */
-  if (stickyAddBtn && form) {
+  if (stickyAddBtn && mainAddBtn) {
     stickyAddBtn.addEventListener('click', function () {
-      if (form.requestSubmit) {
-        form.requestSubmit();
-      } else {
-        form.submit();
-      }
+      mainAddBtn.click();
     });
   }
 
-  /* ============================
-     MAIN FORM SUBMIT → AJAX
-     (stay on page, basic feedback)
-  ============================ */
-  if (form) {
-    form.addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      if (!window.fetch) {
-        // Fallback: regular submit
-        form.submit();
-        return;
-      }
-
-      if (mainAddBtn) {
-        mainAddBtn.disabled = true;
-        mainAddBtn.textContent = 'Adding...';
-      }
-
-      var formData = new FormData(form);
-
-      fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        credentials: 'same-origin',
-      })
-        .then(function () {
-          if (mainAddBtn) {
-            mainAddBtn.textContent = 'Added!';
-          }
-          setTimeout(function () {
-            if (mainAddBtn) {
-              mainAddBtn.disabled = false;
-              mainAddBtn.textContent = 'Add to Cart';
-            }
-          }, 2000);
-        })
-        .catch(function () {
-          if (mainAddBtn) {
-            mainAddBtn.disabled = false;
-            mainAddBtn.textContent = 'Add to Cart';
-          }
-        });
-    });
-  }
+  // No custom form submit handler here — we want
+  // BigCommerce's theme/product.js to own add-to-cart
 })();

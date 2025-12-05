@@ -17,11 +17,17 @@ product:
     {{> components/common/breadcrumbs}}
   </nav>
 
-  <article class="product-card">
+  {{!-- Make this look like a normal productView to BigCommerce --}}
+  <article
+    class="product-card productView"
+    data-product-view
+    data-product-id="{{product.id}}"
+  >
     <div class="product-layout">
 
       {{!-- =========================
-           GALLERY – single image with arrows that step color
+           GALLERY – single image + arrows
+           (arrows drive COLOR radios)
       ========================== --}}
       <section class="product-gallery" aria-label="Product image">
         <div class="gallery-main">
@@ -42,7 +48,7 @@ product:
           {{else}}
             <img
               id="jj-main-image"
-              src="https://via.placeholder.com/900x675/3b6c94/ffffff?text=No+Image"
+              src="https://via.placeholder.com/900x675/ffffff/000000?text=No+Image"
               alt="{{product.title}}"
             />
           {{/if}}
@@ -88,22 +94,21 @@ product:
 
         {{!-- =========================
              ADD TO CART FORM
-             (no data-cart-item-add → JJ handles submit)
+             Let BigCommerce JS own it
         ========================== --}}
         <form
           id="jj-product-form"
           class="jj-product-form"
           method="post"
-          action="/cart.php"
+          action="{{product.add_to_cart_url}}"
           enctype="multipart/form-data"
+          data-cart-item-add
         >
           <input type="hidden" name="action" value="add">
           <input type="hidden" name="product_id" value="{{product.id}}">
           <input type="hidden" id="jj-qty-input" name="qty[]" value="1">
 
-          {{!-- =========================
-               OPTIONS → BC radios + JJ pills
-          ========================== --}}
+          {{!-- OPTIONS → BC radios + JJ pills --}}
           {{#if product.options}}
             {{#each product.options}}
               <div
@@ -121,7 +126,7 @@ product:
 
                 <div class="pill-row pill-row--scroll">
                   {{#each values}}
-                    {{!-- REAL BigCommerce input --}}
+                    {{!-- Real BC input --}}
                     <input
                       class="jj-option-radio"
                       type="radio"
@@ -133,14 +138,13 @@ product:
                       data-product-option-change
                     >
 
-                    {{!-- JJ pill UI = label for the radio --}}
+                    {{!-- JJ pill UI = label for radio --}}
                     <label
                       class="pill{{#if selected}} is-active{{/if}}"
                       for="attribute_{{../id}}_{{id}}"
                       data-option-id="{{../id}}"
                       data-value-id="{{id}}"
                     >
-                      {{!-- later we can drop swatch images in here --}}
                       <span class="pill-label">{{label}}</span>
                     </label>
                   {{/each}}
@@ -149,9 +153,7 @@ product:
             {{/each}}
           {{/if}}
 
-          {{!-- =========================
-               QTY + primary add-to-cart
-          ========================== --}}
+          {{!-- QTY + primary add-to-cart --}}
           <div class="qty-row">
             <div class="qty-control">
               <button
@@ -183,7 +185,7 @@ product:
           </p>
         </form>
 
-        {{!-- Best ways to fish it (static demo for now) --}}
+        {{!-- Best ways to fish it (demo) --}}
         <div class="rig-block">
           <div class="rig-title">Best ways to fish it (demo)</div>
           <div class="rig-grid">
@@ -209,9 +211,7 @@ product:
       </section>
     </div>
 
-    {{!-- =========================
-         DETAILS / ACCORDIONS
-    ========================== --}}
+    {{!-- DETAILS / ACCORDIONS --}}
     <section class="details-shell" aria-label="Details and specs">
       <details open>
         <summary>On-the-water overview (demo copy)</summary>
