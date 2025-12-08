@@ -16,13 +16,13 @@
         {{#if product.images.length '>' 1 }}
         {{> components/carousel-content-announcement}}
         {{/if}}
-        <figure class="productView-image"
+                <figure class="productView-image"
                 data-image-gallery-main
                 {{#if product.main_image}}
                 data-zoom-image="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size }}"
                 {{/if}}
                 >
-            <div class="productView-img-container">
+            <div class="productView-img-container jj-image-nav-wrapper">
                 {{!-- Remove the surrounding a-element if there is no main image. --}}
                 {{#if product.main_image}}
                     <a href="{{getImageSrcset product.main_image (cdn theme_settings.default_image_product) 1x=theme_settings.zoom_size}}"
@@ -40,8 +40,25 @@
                 {{#if product.main_image}}
                     </a>
                 {{/if}}
+
+                {{!-- JJ IMAGE NAV ARROWS - overlay on main image --}}
+                <button
+                    type="button"
+                    class="jj-image-nav jj-image-nav--prev"
+                    aria-label="Previous color"
+                >
+                    &#8249;
+                </button>
+                <button
+                    type="button"
+                    class="jj-image-nav jj-image-nav--next"
+                    aria-label="Next color"
+                >
+                    &#8250;
+                </button>
             </div>
         </figure>
+
         <ul class="productView-thumbnails"{{#gt product.images.length 7}} data-slick='{
                 "infinite": false,
                 "mobileFirst": true,
