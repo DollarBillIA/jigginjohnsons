@@ -1,8 +1,5 @@
 // JJ PRODUCT OVERRIDES
 // ====================
-//
-// Swatch rows behave like horizontal strips with scroll.
-// Gallery arrows use Slick's structure but are restyled.
 
 // ------------------------------------------------------------
 // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
@@ -81,56 +78,54 @@
 }
 
 // ------------------------------------------------------------
-// GALLERY ARROWS (SLICK)
+// CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
 // ------------------------------------------------------------
 
 .productView-images {
   position: relative;
 }
 
-.productView-images .slick-prev,
-.productView-images .slick-next {
+.jj-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   width: 32px;
   height: 32px;
   border-radius: 9999px;
+  border: none;
   background: rgba(0, 0, 0, 0.08);
-  color: #555;
-  display: flex !important;
+  color: #444;
+  display: flex;
   align-items: center;
   justify-content: center;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
   cursor: pointer;
+  z-index: 5;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
 }
 
-// Left/right placement
-.productView-images .slick-prev {
+.jj-gallery-arrow--prev {
   left: 0.75rem;
 }
 
-.productView-images .slick-next {
+.jj-gallery-arrow--next {
   right: 0.75rem;
 }
 
-// Force visible arrow glyphs, overriding theme defaults
-.productView-images .slick-prev:before,
-.productView-images .slick-next:before {
-  font-size: 18px !important;
-  line-height: 1;
-  color: inherit !important;
-  font-family: inherit;
-}
-
-.productView-images .slick-prev:before {
-  content: '‹' !important;
-}
-
-.productView-images .slick-next:before {
-  content: '›' !important;
-}
-
-.productView-images .slick-prev:hover,
-.productView-images .slick-next:hover {
+.jj-gallery-arrow:hover {
   background: rgba(0, 0, 0, 0.18);
+}
+
+.jj-gallery-arrow:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .jj-gallery-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
 }
