@@ -149,33 +149,6 @@ export default class Product extends PageManager {
 
 // JJ – image nav arrows controlling color swatches
 $(document).ready(() => {
-    const $imgContainer = $('.productView-img-container');
-
-    if (!$imgContainer.length) return;
-
-    // Add wrapper class so our SCSS positions arrows correctly
-    $imgContainer.addClass('jj-image-nav-wrapper');
-
-    // Only inject buttons once (fallback if template didn't render real arrows)
-    if ($imgContainer.find('.jj-image-nav').length === 0) {
-        $imgContainer.append(`
-            <button
-                type="button"
-                class="jj-image-nav jj-image-nav--prev"
-                aria-label="Previous color"
-            >
-                &#8249;
-            </button>
-            <button
-                type="button"
-                class="jj-image-nav jj-image-nav--next"
-                aria-label="Next color"
-            >
-                &#8250;
-            </button>
-        `);
-    }
-
     // Helper: move the selected COLOR swatch left/right
     function moveColor(delta) {
         // Grab the first swatch group – this is your Color row
@@ -196,8 +169,8 @@ $(document).ready(() => {
             currentIndex = 0;
         }
 
-        let newIndex = currentIndex + delta;
         const count = $options.length;
+        let newIndex = currentIndex + delta;
 
         // Wrap around
         if (newIndex < 0) {
@@ -214,13 +187,13 @@ $(document).ready(() => {
         $target.trigger('change').trigger('click').focus();
     }
 
-    // Wire the buttons — using the REAL arrow classes visible in the DOM
-    $imgContainer.on('click', '.jj-gallery-arrow--prev', (event) => {
+    // Wire the buttons — delegate off document so we always catch clicks
+    $(document).on('click', '.jj-gallery-arrow--prev', (event) => {
         event.preventDefault();
         moveColor(-1);
     });
 
-    $imgContainer.on('click', '.jj-gallery-arrow--next', (event) => {
+    $(document).on('click', '.jj-gallery-arrow--next', (event) => {
         event.preventDefault();
         moveColor(1);
     });
