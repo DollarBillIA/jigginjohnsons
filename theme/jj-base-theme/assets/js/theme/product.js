@@ -156,7 +156,7 @@ $(document).ready(() => {
     // Add wrapper class so our SCSS positions arrows correctly
     $imgContainer.addClass('jj-image-nav-wrapper');
 
-    // Only inject buttons once
+    // Only inject buttons once (fallback if template didn't render real arrows)
     if ($imgContainer.find('.jj-image-nav').length === 0) {
         $imgContainer.append(`
             <button
@@ -214,13 +214,13 @@ $(document).ready(() => {
         $target.trigger('change').trigger('click').focus();
     }
 
-    // Wire the buttons
-    $imgContainer.on('click', '.jj-image-nav--prev', (event) => {
+    // Wire the buttons — using the REAL arrow classes visible in the DOM
+    $imgContainer.on('click', '.jj-gallery-arrow--prev', (event) => {
         event.preventDefault();
         moveColor(-1);
     });
 
-    $imgContainer.on('click', '.jj-image-nav--next', (event) => {
+    $imgContainer.on('click', '.jj-gallery-arrow--next', (event) => {
         event.preventDefault();
         moveColor(1);
     });
