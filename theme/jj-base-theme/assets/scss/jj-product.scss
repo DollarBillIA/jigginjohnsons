@@ -1,32 +1,12 @@
 // JJ PRODUCT OVERRIDES
 // ====================
 //
-// Goal:
-// - Keep BigCommerce’s stock markup + JS.
-// - Make swatch options (color + scent) behave like horizontal strips
-//   with scroll.
-// - Restyle the gallery arrows so they’re visible and centered on the image
-//   (these are still the native Slick arrows, just prettier).
+// Swatch rows behave like horizontal strips with scroll.
+// Gallery arrows use Slick's structure but are restyled.
 
 // ------------------------------------------------------------
 // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
 // ------------------------------------------------------------
-//
-// Targets markup like:
-//
-// <div class="productView-options">
-//   <div class="form-field" data-product-attribute="swatch">
-//     <label class="form-label">Color …</label>
-//     <div class="form-option-wrapper">…</div>
-//     <div class="form-option-wrapper">…</div>
-//     ...
-//   </div>
-// </div>
-//
-// This will:
-// - Put all swatches in one horizontal row.
-// - Allow sideways scroll if they don’t all fit.
-// - Size tiles to ~64px so you get ~6 per row on desktop.
 
 .productView-options .form-field[data-product-attribute='swatch'] {
   overflow-x: auto;
@@ -36,7 +16,6 @@
   margin-bottom: 0.75rem;
 }
 
-// Label (e.g. “COLOR: BLOODY MOTOR OIL *”) stays on its own line
 .productView-options
   .form-field[data-product-attribute='swatch']
   > .form-label {
@@ -45,7 +24,6 @@
   white-space: normal;
 }
 
-// Each swatch tile wrapper -> inline-block so they line up horizontally
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-wrapper {
@@ -54,7 +32,6 @@
   margin: 0 0.25rem 0 0;
 }
 
-// Clickable area
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option {
@@ -62,7 +39,6 @@
   overflow: hidden;
 }
 
-// Image box (the small square icon)
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-variant {
@@ -72,7 +48,6 @@
   background-position: center;
 }
 
-// Expanded preview image – keep same size so we don’t get jumps
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-image {
@@ -82,7 +57,6 @@
   background-position: center;
 }
 
-// Slightly nicer scrollbar when needed
 .productView-options
   .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
   height: 4px;
@@ -107,14 +81,13 @@
 }
 
 // ------------------------------------------------------------
-// GALLERY ARROWS (USE BC/SLICK ARROWS, JUST STYLE THEM)
+// GALLERY ARROWS (SLICK)
 // ------------------------------------------------------------
 
 .productView-images {
   position: relative;
 }
 
-// Base arrow styling
 .productView-images .slick-prev,
 .productView-images .slick-next {
   width: 32px;
@@ -128,9 +101,10 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
+  cursor: pointer;
 }
 
-// Left/right positioning
+// Left/right placement
 .productView-images .slick-prev {
   left: 0.75rem;
 }
@@ -139,14 +113,23 @@
   right: 0.75rem;
 }
 
-// Use Slick’s pseudo-element for the actual arrow glyph
+// Force visible arrow glyphs, overriding theme defaults
 .productView-images .slick-prev:before,
 .productView-images .slick-next:before {
-  font-size: 18px;
-  color: inherit;
+  font-size: 18px !important;
+  line-height: 1;
+  color: inherit !important;
+  font-family: inherit;
 }
 
-// Slight hover feedback
+.productView-images .slick-prev:before {
+  content: '‹' !important;
+}
+
+.productView-images .slick-next:before {
+  content: '›' !important;
+}
+
 .productView-images .slick-prev:hover,
 .productView-images .slick-next:hover {
   background: rgba(0, 0, 0, 0.18);
