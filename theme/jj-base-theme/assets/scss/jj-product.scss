@@ -1,5 +1,5 @@
 // ===========================================
-// JJ PRODUCT LAYOUT + GLOBAL SWATCH STYLING
+// JJ PRODUCT LAYOUT + SWATCH ROWS
 // ===========================================
 
 // ----- JJ layout shell (safe even with stock template) -----
@@ -107,18 +107,15 @@
 }
 
 // -----------------------------------------------
-// GLOBAL SWATCH / PATTERN ROWS (COLORS + SCENTS)
+// SWATCH / PATTERN ROWS (COLORS + SCENTS)
 // -----------------------------------------------
 //
-// Roots / Cornerstone render swatches inside a
-// `.form-option-wrapper` container. We treat that
-// as a horizontal scroll row of tiles.
-//
-// This hits *all* swatch groups (color, scent, etc.)
-// without caring about option IDs or custom templates.
+// IMPORTANT: we *only* change layout here.
+// We leave Roots’ inner swatch styles alone
+// so the icons / patterns render normally.
 //
 
-/* Horizontal swatch row */
+/* Make each swatch group a horizontal, scrollable row */
 .form-option-wrapper {
   display: flex;
   flex-wrap: nowrap;
@@ -128,47 +125,21 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Each tile: fixed 65×65 (your desired size) */
+/* Each option behaves like a tile of fixed width.
+   Height will follow the theme’s existing styles. */
 .form-option-wrapper .form-option {
-  flex: 0 0 65px;
-  width: 65px;
-  height: 65px;
-  padding: 0;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
+  flex: 0 0 65px;   // about 6 visible on desktop
+  max-width: 65px;
 }
 
-/* Ensure the clickable swatch label fills the tile */
-.form-option-wrapper .form-option-variant,
-.form-option-wrapper .form-option-swatch {
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* Give a tiny bit more spacing on small screens if needed */
+@media (max-width: 480px) {
+  .form-option-wrapper {
+    gap: 0.35rem;
+  }
 
-/* Images inside the tile */
-.form-option-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; // use 'cover' if you want full-bleed
-}
-
-/* Active (selected) tile ring */
-.form-option-wrapper .form-option.is-active {
-  outline: 2px solid #ffb200;
-  outline-offset: 2px;
-}
-
-/* Hover feedback */
-.form-option-wrapper .form-option:hover {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+  .form-option-wrapper .form-option {
+    flex: 0 0 60px;
+    max-width: 60px;
+  }
 }
