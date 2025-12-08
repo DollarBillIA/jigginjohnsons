@@ -158,3 +158,57 @@ $(document).ready(() => {
         moveColor(1);
     });
 });
+// JJ: gallery arrows cycle the first swatch field (usually Color)
+$(document).ready(() => {
+    const $colorField = $('.productView-options .form-field[data-product-attribute="swatch"]').first();
+    if (!$colorField.length) return;
+
+    const $colorInputs = $colorField.find('input.form-radio');
+    if ($colorInputs.length <= 1) return;
+
+    const container = $colorField.get(0);
+
+    function scrollIntoView($input) {
+        if (!container) return;
+        const chip = $input.closest('.form-option-wrapper').get(0);
+        if (!chip) return;
+
+        const chipLeft = chip.offsetLeft;
+        const chipRight = chipLeft + chip.offsetWidth;
+        const viewLeft = container.scrollLeft;
+        const viewRight = viewLeft + container.clientWidth;
+
+        if (chipLeft < viewLeft) {
+            container.scrollLeft = chipLeft - 8;
+        } else if (chipRight > viewRight) {
+            container.scrollLeft = chipRight - container.clientWidth + 8;
+        }
+    }
+
+    function currentIndex() {
+        const $checked = $colorInputs.filter(':checked');
+        const idx = $colorInputs.index($checked);
+        return idx === -1 ? 0 : idx;
+    }
+
+    function selectIndex(newIdx) {
+        const count = $colorInputs.length;
+        const idx = ((newIdx % count) + count) % count; // wrap around
+        const $target = $colorInputs.eq(idx);
+        if (!$target.length) return;
+
+        // This click lets BigCommerce handle all the pricing / image swap
+        $target.trigger('click');
+        scrollIntoView($target);
+    }
+
+    $('.jj-gallery-arrow--prev').on('click', (event) => {
+        event.preventDefault();
+        selectIndex(currentIndex() - 1);
+    });
+
+    $('.jj-gallery-arrow--next').on('click', (event) => {
+        event.preventDefault();
+        selectIndex(currentIndex() + 1);
+    });
+});
