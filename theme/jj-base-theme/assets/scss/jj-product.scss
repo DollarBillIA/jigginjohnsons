@@ -129,3 +129,127 @@
     font-size: 16px;
   }
 }
+// ============================================================================
+// JJ PRODUCT VIEW POLISH
+// ============================================================================
+
+// 1) Wider canvas on product pages
+.page-type-product {
+    .container {
+        max-width: 1320px; // a bit wider than stock Roots
+    }
+}
+
+// 2) Card shell + subtle background
+.page-type-product .productView {
+    margin-top: 2rem;
+    background: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    padding: 2rem 2.5rem;
+
+    @media (max-width: 800px) {
+        padding: 1.5rem 1.25rem;
+        box-shadow: none;
+        border-radius: 0;
+    }
+}
+
+// 3) Topline: brand + price row
+.page-type-product .productView .jj-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+}
+
+.page-type-product .productView .jj-topline-brand {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #fafafa;
+    a {
+        color: inherit;
+    }
+}
+
+.page-type-product .productView .jj-topline-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+// Title slightly toned down vs price
+.page-type-product .productView .jj-product-title {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    margin: 0.25rem 0 1rem;
+}
+
+// 4) Amazon-style primary Add to Cart (scoped to product page)
+$page-amazon-yellow: #ffbf00;
+$page-amazon-yellow-hover: #f0a800;
+
+.page-type-product .productView-options .button.button--primary {
+    background-color: $page-amazon-yellow;
+    border-color: darken($page-amazon-yellow, 12%);
+    color: #111;
+    font-weight: 700;
+    text-transform: none;
+}
+
+.page-type-product .productView-options .button.button--primary:hover,
+.page-type-product .productView-options .button.button--primary:focus {
+    background-color: $page-amazon-yellow-hover;
+    border-color: darken($page-amazon-yellow-hover, 12%);
+    color: #111;
+}
+
+// 5) Availability + custom fields strip under cart
+.jj-post-cart-meta {
+    margin-top: 0.9rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: grid;
+    gap: 0.15rem;
+    font-size: 0.85rem;
+}
+
+.jj-post-cart-meta .jj-meta-row {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.jj-post-cart-meta .jj-meta-label {
+    font-weight: 600;
+    color: #444;
+}
+
+.jj-post-cart-meta .jj-meta-value {
+    color: #555;
+}
+
+// 6) Slightly thicker custom horizontal scroll track under swatches
+.page-type-product .productView-options
+.form-field[data-product-attribute="swatch"] {
+    scrollbar-width: thin;
+}
+
+.page-type-product .productView-options
+.form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
+    height: 6px; // was ~4px, now ~50% thicker
+}
+
+.page-type-product .productView-options
+.form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.page-type-product .productView-options
+.form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.24);
+    border-radius: 999px;
+}

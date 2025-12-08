@@ -42,23 +42,6 @@
                 {{/if}}
             </div>
         </figure>
-
-        {{!-- CUSTOM ARROWS TIED TO COLOR SWATCHES --}}
-        <button
-            class="jj-gallery-arrow jj-gallery-arrow--prev"
-            type="button"
-            aria-label="Previous color"
-        >
-            &#8249;
-        </button>
-        <button
-            class="jj-gallery-arrow jj-gallery-arrow--next"
-            type="button"
-            aria-label="Next color"
-        >
-            &#8250;
-        </button>
-
         <ul class="productView-thumbnails"{{#gt product.images.length 7}} data-slick='{
                 "infinite": false,
                 "mobileFirst": true,
@@ -85,6 +68,7 @@
             {{/each}}
         </ul>
     </section>
+
     <section class="productView-details product-data">
         <div class="productView-product">
             {{#if page_type '===' 'product'}}
@@ -95,12 +79,29 @@
                 {{/or}}
             {{/if}}
 
-            <h1 class="productView-title main-heading">{{product.title}}</h1>
-            {{#if product.brand}}
-                <span class="productView-brand">
-                    <a href="{{product.brand.url}}"><span><strong>{{product.brand.name}}</strong></span></a>
-                </span>
-            {{/if}}
+            {{!-- JJ top row: brand + price --}}
+            <div class="jj-topline">
+                {{#if product.brand}}
+                    <span class="productView-brand jj-topline-brand">
+                        <a href="{{product.brand.url}}">
+                            <span><strong>{{product.brand.name}}</strong></span>
+                        </a>
+                    </span>
+                {{/if}}
+
+                <div class="productView-price jj-topline-price">
+                    {{#or customer (if theme_settings.restrict_to_login '!==' true)}}
+                        {{> components/products/price price=product.price}}
+                    {{else}}
+                        {{> components/common/login-for-pricing}}
+                    {{/or}}
+                </div>
+            </div>
+
+            <h1 class="productView-title main-heading jj-product-title">
+                {{product.title}}
+            </h1>
+
             <div class="productSKU">
                 <dt class="productView-info-name sku-label" {{#unless product.sku}} style="display: none;"{{/unless}}>{{lang 'products.sku'}}</dt>
                 <dd class="productView-info-value" data-product-sku{{#if schema}} itemprop="sku"{{/if}}>{{product.sku}}</dd>
@@ -112,38 +113,14 @@
                     <dd class="productView-info-value" data-product-upc>{{product.upc}}</dd>
                 </div>
             {{/if}}
-            {{#if product.availability}}
-                <div>
-                    <dt class="productView-info-name">{{lang 'products.availability'}}</dt>
-                    <dd class="productView-info-value">{{product.availability}}</dd>
-                </div>
-            {{/if}}
 
-            {{!-- CUSTOM FIELDS STACKED UNDER AVAILABILITY --}}
-            {{#if product.custom_fields}}
-                <div class="productView-customFields">
-                    {{#each product.custom_fields}}
-                        <div class="productView-customField">
-                            <dt class="productView-info-name">{{name}}</dt>
-                            <dd class="productView-info-value">{{{value}}}</dd>
-                        </div>
-                    {{/each}}
-                </div>
-            {{/if}}
-            {{!-- END CUSTOM FIELDS BLOCK --}}
+            {{!-- Availability has been moved under Add to Cart --}}
 
             {{#if product.call_for_price}}
                 <p class="productView-price">
                     <span>{{product.call_for_price}}</span>
                 </p>
             {{/if}}
-            <div class="productView-price">
-                {{#or customer (if theme_settings.restrict_to_login '!==' true)}}
-                    {{> components/products/price price=product.price}}
-                {{else}}
-                    {{> components/common/login-for-pricing}}
-                {{/or}}
-            </div>
 
             {{#and settings.bulk_discount_enabled product.bulk_discount_rates.length}}
                 <div class="productView-info-bulkPricing">
@@ -178,6 +155,7 @@
                     {{> components/products/modals/writeReview}}
                 {{/if}}
             </div>
+
             <div class="productView-specs">
             {{#all product.weight theme_settings.show_product_weight}}
                 <div class="productView-info">
@@ -229,11 +207,13 @@
             </div>
             {{product.detail_messages}}
         </div>
+
         {{#and product.warranty theme_settings.show_short_desc}}
             <div class="productView-warranty">
                 {{{product.warranty}}}
             </div>
         {{/and}}
+
         <div class="productView-options">
             <form class="form" method="post" action="{{product.cart_url}}" enctype="multipart/form-data"
                   data-cart-item-add>
@@ -280,6 +260,25 @@
                 </div>
                 
                 {{> components/products/add-to-cart with_wallet_buttons=true}}
+
+                {{!-- JJ: availability + custom fields under Add to Cart --}}
+                <div class="jj-post-cart-meta">
+                    {{#if product.availability}}
+                        <div class="jj-meta-row">
+                            <span class="jj-meta-label">{{lang 'products.availability'}}</span>
+                            <span class="jj-meta-value">{{product.availability}}</span>
+                        </div>
+                    {{/if}}
+
+                    {{#if product.custom_fields}}
+                        {{#each product.custom_fields}}
+                            <div class="jj-meta-row">
+                                <span class="jj-meta-label">{{name}}</span>
+                                <span class="jj-meta-value">{{{value}}}</span>
+                            </div>
+                        {{/each}}
+                    {{/if}}
+                </div>
 
                 {{#if product.out_of_stock}}
                     {{#if product.out_of_stock_message}}
