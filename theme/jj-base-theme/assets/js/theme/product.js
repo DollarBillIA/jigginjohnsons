@@ -12,13 +12,13 @@ import modalFactory from './global/modal';
 
 /**
  * JJ – Keep the selected COLOR swatch visible in its horizontal strip.
- * Works for both direct clicks and gallery-arrow changes, since both
+ * Works for both direct clicks and arrow changes, since both
  * ultimately change the checked radio.
  */
 function jjInitSwatchAutoScroll() {
     // Only target the Color group: first swatch field in product options
     const colorField = document.querySelector(
-        '.productView-options .form-field[data-product-attribute="swatch"]'
+        '.productView-options .form-field[data-product-attribute="swatch"]',
     );
 
     if (!colorField) return;
@@ -27,7 +27,7 @@ function jjInitSwatchAutoScroll() {
 
     function scrollActiveIntoView() {
         const activeOption = colorField.querySelector(
-            'input.form-radio:checked + .form-option'
+            'input.form-radio:checked + .form-option',
         );
         if (!activeOption) return;
 
@@ -75,7 +75,7 @@ export default class Product extends PageManager {
                 window.history.replaceState(
                     null,
                     document.title,
-                    window.location.pathname
+                    window.location.pathname,
                 );
             }
         });
@@ -88,7 +88,7 @@ export default class Product extends PageManager {
         this.productDetails = new ProductDetails(
             $('.productView'),
             this.context,
-            window.BCData.product_attributes
+            window.BCData.product_attributes,
         );
         this.productDetails.setProductVariant();
 
@@ -98,6 +98,9 @@ export default class Product extends PageManager {
 
         // JJ: keep the active COLOR swatch in view when it changes
         jjInitSwatchAutoScroll();
+
+        // JJ: image arrows that cycle the COLOR swatches
+        this.initJjImageNavArrows();
 
         const $reviewForm = classifyForm('.writeReview-form');
 
@@ -124,6 +127,87 @@ export default class Product extends PageManager {
         this.productReviewHandler();
     }
 
+    /**
+     * Inject left/right arrows over the main image and wire them so they
+     * move the *Color* swatch selection forward/backward.
+     */
+    initJjImageNavArrows() {
+        const imgContainer = document.querySelector('.productView-img-container');
+        if (!imgContainer) return;
+
+        // Only inject once
+        if (!imgContainer.classList.contains('jj-image-nav-wrapper')) {
+            imgContainer.classList.add('jj-image-nav-wrapper');
+
+            if (!imgContainer.querySelector('.jj-image-nav')) {
+                imgContainer.insertAdjacentHTML(
+                    'beforeend',
+                    `
+                        <button
+                            type="button"
+                            class="jj-image-nav jj-image-nav--prev"
+                            aria-label="Previous color"
+                        >
+                            &#8249;
+                        </button>
+                        <button
+                            type="button"
+                            class="jj-image-nav jj-image-nav--next"
+                            aria-label="Next color"
+                        >
+                            &#8250;
+                        </button>
+                    `,
+                );
+            }
+        }
+
+        // Locate the COLOR swatch field (first swatch group)
+        const colorField = document.querySelector(
+            '.productView-options .form-field[data-product-attribute="swatch"]',
+        );
+        if (!colorField) return;
+
+        const getOptions = () =>
+            Array.from(colorField.querySelectorAll('input.form-radio'));
+
+        const getCurrentIndex = (options) => {
+            const checkedIndex = options.findIndex((opt) => opt.checked);
+            return checkedIndex === -1 ? 0 : checkedIndex;
+        };
+
+        const selectIndex = (delta) => {
+            const options = getOptions();
+            if (!options.length) return;
+
+            const current = getCurrentIndex(options);
+            const count = options.length;
+
+            // Wrap around safely
+            const nextIndex = ((current + delta) % count + count) % count;
+            const target = options[nextIndex];
+            if (!target) return;
+
+            // Clicking the radio lets BigCommerce do:
+            // - image swap
+            // - price / variant update
+            target.click();
+        };
+
+        imgContainer.addEventListener('click', (event) => {
+            const prev = event.target.closest('.jj-image-nav--prev');
+            const next = event.target.closest('.jj-image-nav--next');
+
+            if (prev) {
+                event.preventDefault();
+                selectIndex(-1);
+            } else if (next) {
+                event.preventDefault();
+                selectIndex(1);
+            }
+        });
+    }
+
     ariaDescribeReviewInputs($form) {
         $form.find('[data-input]').each((_, input) => {
             const $input = $(input);
@@ -146,77 +230,3 @@ export default class Product extends PageManager {
         }
     }
 }
-
-// JJ – image nav arrows controlling color swatches
-$(document).ready(() => {
-    const $imgContainer = $('.productView-img-container');
-
-    if (!$imgContainer.length) return;
-
-    // Add wrapper class so our SCSS positions arrows correctly
-    $imgContainer.addClass('jj-image-nav-wrapper');
-
-    // Only inject buttons once
-    if ($imgContainer.find('.jj-image-nav').length === 0) {
-        $imgContainer.append(`
-            <button
-                type="button"
-                class="jj-image-nav jj-image-nav--prev"
-                aria-label="Previous color"
-            >
-                &#8249;
-            </button>
-            <button
-                type="button"
-                class="jj-image-nav jj-image-nav--next"
-                aria-label="Next color"
-            >
-                &#8250;
-            </button>
-        `);
-    }
-
-    // Helper: move the selected COLOR swatch left/right
-    function moveColor(delta) {
-        // Grab the first swatch group – this is your Color row
-        const $swatchGroup = $('[data-product-attribute="swatch"]').first();
-        if (!$swatchGroup.length) return;
-
-        const $options = $swatchGroup.find('input.form-radio');
-        if (!$options.length) return;
-
-        let currentIndex = $options.index($options.filter(':checked'));
-
-        // If nothing is checked for some reason, default to first
-        if (currentIndex === -1) {
-            currentIndex = 0;
-        }
-
-        let newIndex = currentIndex + delta;
-
-        // Wrap around
-        if (newIndex < 0) {
-            newIndex = $options.length - 1;
-        } else if (newIndex >= $options.length) {
-            newIndex = 0;
-        }
-
-        const $target = $($options.get(newIndex));
-
-        // Trigger click so BigCommerce's own JS runs:
-        // - image swap
-        // - price / variant update
-        $target.trigger('click').focus();
-    }
-
-    // Wire the buttons
-    $imgContainer.on('click', '.jj-image-nav--prev', (event) => {
-        event.preventDefault();
-        moveColor(-1);
-    });
-
-    $imgContainer.on('click', '.jj-image-nav--next', (event) => {
-        event.preventDefault();
-        moveColor(1);
-    });
-});
