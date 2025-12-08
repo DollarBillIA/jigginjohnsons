@@ -158,19 +158,14 @@ $(document).ready(() => {
         const $options = $swatchGroup.find('input.form-radio');
         if (!$options.length) return;
 
-        // Prefer BC's data-state="true" flag; fall back to :checked
-        let $current = $options.filter('[data-state="true"]');
-        if (!$current.length) {
-            $current = $options.filter(':checked');
-        }
-
-        let currentIndex = $options.index($current);
+        // Current index based on the checked radio
+        let currentIndex = $options.index($options.filter(':checked'));
         if (currentIndex === -1) {
             currentIndex = 0;
         }
 
-        const count = $options.length;
         let newIndex = currentIndex + delta;
+        const count = $options.length;
 
         // Wrap around
         if (newIndex < 0) {
@@ -182,9 +177,8 @@ $(document).ready(() => {
         const $target = $options.eq(newIndex);
         if (!$target.length) return;
 
-        // Explicitly set and fire both events so BC updates images, price, etc.
-        $target.prop('checked', true);
-        $target.trigger('change').trigger('click').focus();
+        // Let BigCommerce handle all the variant logic
+        $target.trigger('click').focus();
     }
 
     // Wire the buttons — delegate off document so we always catch clicks
