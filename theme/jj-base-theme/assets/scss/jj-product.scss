@@ -143,3 +143,41 @@
     max-width: 60px;
   }
 }
+/* ===========================
+   JJ – Swatch row layout (Color & Scent)
+   Targets standard BC swatch markup:
+   .form-field[data-product-attribute="swatch"] …
+   ============================ */
+
+/* Keep label full width with some spacing */
+.form-field[data-product-attribute="swatch"] > .form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Lay out each swatch wrapper in a row that can wrap */
+.form-field[data-product-attribute="swatch"] .form-option-wrapper {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+}
+
+/* Remove extra padding around the clickable swatch */
+.form-field[data-product-attribute="swatch"] .form-option-swatch {
+  padding: 0;
+}
+
+/* Make the pattern icon itself the 65×65 square */
+.form-field[data-product-attribute="swatch"] .form-option-variant--pattern {
+  display: block;
+  width: 65px;
+  height: 65px;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Optional: very light selected outline so it feels like a pill */
+.form-field[data-product-attribute="swatch"] .form-radio:checked + .form-option-swatch .form-option-variant--pattern {
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.25);
+  border-radius: 4px;
+}
