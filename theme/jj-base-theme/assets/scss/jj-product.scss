@@ -1,220 +1,92 @@
-// ===========================================
-// JJ PRODUCT LAYOUT + SWATCH ROWS
-// ===========================================
+// JJ PRODUCT TWEAKS
+// ==================
+// Scope everything to product pages so other templates stay safe.
 
-// ----- JJ layout shell (safe even with stock template) -----
+.page-type-product {
 
-.jj-product-page {
-  margin-top: 2rem;
-  margin-bottom: 3rem;
-}
+  // ------------------------------------------------------------
+  // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
+  // ------------------------------------------------------------
+  //
+  // BigCommerce markup (simplified):
+  // <div class="form-field" data-product-attribute="swatch">
+  //   <label class="form-label">...</label>
+  //   <div class="form-option-wrapper">…</div>
+  //   <div class="form-option-wrapper">…</div>
+  //   ...
+  // </div>
+  //
+  // Strategy:
+  // - Make the .form-field itself a horizontal scroll container.
+  // - Keep the label on its own line.
+  // - Render each .form-option-wrapper as inline-block so they
+  //   sit in a single row and overflow horizontally.
+  // - Size the swatch boxes ~64px so you get ~6 across on desktop.
 
-.jj-product-page .productView {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.jj-product-page .productView-images {
-  width: 100%;
-}
-
-.jj-product-page .productView-details {
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .jj-product-page .productView {
-    flex-direction: row;
-    align-items: flex-start;
+  .productView-options .form-field[data-product-attribute='swatch'] {
+    // container row
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
-  .jj-product-page .productView-images {
-    flex: 1 1 55%;
-    max-width: 55%;
+  // label (e.g. "Color: Bloody Motor Oil *")
+  .productView-options .form-field[data-product-attribute='swatch'] > .form-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    white-space: normal; // allow label text to wrap
   }
 
-  .jj-product-page .productView-details {
-    flex: 1 1 45%;
-    max-width: 45%;
-  }
-}
-
-// Optional JJ accordions if/when we use them again
-.jj-tabs {
-  display: grid;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.jj-tab {
-  border-radius: 4px;
-  border: 1px solid #e2e2e2;
-  background: #fafafa;
-}
-
-.jj-tab-title {
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  list-style: none;
-}
-
-.jj-tab[open] .jj-tab-title {
-  background: #f2f2f2;
-}
-
-.jj-tab-body {
-  padding: 0.75rem 1rem 1rem;
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-// “Best ways to fish it” demo block
-.jj-fish-ways {
-  margin-top: 1rem;
-}
-
-.jj-fish-ways h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.75rem;
-}
-
-.jj-ways-grid {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 0.5rem;
-}
-
-@media (min-width: 640px) {
-  .jj-ways-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.jj-way {
-  padding: 0.75rem 0.85rem;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background: #fff;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.jj-way strong {
-  display: block;
-  margin-bottom: 0.15rem;
-}
-
-// -----------------------------------------------
-// SWATCH / PATTERN ROWS (COLORS + SCENTS)
-// -----------------------------------------------
-//
-// IMPORTANT: we *only* change layout here.
-// We leave Roots’ inner swatch styles alone
-// so the icons / patterns render normally.
-//
-
-/* Make each swatch group a horizontal, scrollable row */
-.form-option-wrapper {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 0.5rem;
-  padding: 0.25rem 0;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Each option behaves like a tile of fixed width.
-   Height will follow the theme’s existing styles. */
-.form-option-wrapper .form-option {
-  flex: 0 0 65px;   // about 6 visible on desktop
-  max-width: 65px;
-}
-
-/* Give a tiny bit more spacing on small screens if needed */
-@media (max-width: 480px) {
-  .form-option-wrapper {
-    gap: 0.35rem;
+  // each swatch “tile” wrapper
+  .productView-options .form-field[data-product-attribute='swatch'] .form-option-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0.25rem 0 0; // horizontal gap between tiles
   }
 
-  .form-option-wrapper .form-option {
-    flex: 0 0 60px;
-    max-width: 60px;
+  // clickable area around the image
+  .productView-options .form-field[data-product-attribute='swatch'] .form-option {
+    border-radius: 4px;
+    overflow: hidden;
   }
-}
-/* ===========================
-   JJ – Swatch row layout (Color & Scent)
-   Targets standard BC swatch markup:
-   .form-field[data-product-attribute="swatch"] …
-   ============================ */
 
-/* Keep label full width with some spacing */
-.form-field[data-product-attribute="swatch"] > .form-label {
-  display: block;
-  margin-bottom: 0.5rem;
-}
+  // actual image box
+  .productView-options .form-field[data-product-attribute='swatch'] .form-option-variant {
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    background-position: center;
+  }
 
-/* Lay out each swatch wrapper in a row that can wrap */
-.form-field[data-product-attribute="swatch"] .form-option-wrapper {
-  display: inline-block;
-  margin: 0 4px 4px 0;
-}
+  // make the “expanded” preview match the same size
+  .productView-options .form-field[data-product-attribute='swatch'] .form-option-image {
+    width: 64px;
+    height: 64px;
+    background-size: cover;
+    background-position: center;
+  }
 
-/* Remove extra padding around the clickable swatch */
-.form-field[data-product-attribute="swatch"] .form-option-swatch {
-  padding: 0;
-}
+  // subtle scrollbar look on WebKit so it doesn’t feel broken
+  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
+    height: 4px;
+  }
 
-/* Make the pattern icon itself the 65×65 square */
-.form-field[data-product-attribute="swatch"] .form-option-variant--pattern {
-  display: block;
-  width: 65px;
-  height: 65px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar-track {
+    background: transparent;
+  }
 
-/* Optional: very light selected outline so it feels like a pill */
-.form-field[data-product-attribute="swatch"] .form-radio:checked + .form-option-swatch .form-option-variant--pattern {
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.25);
-  border-radius: 4px;
-}
-/* JJ – image nav arrows over main product image */
-.productView-img-container.jj-image-nav-wrapper {
-    position: relative;
-}
+  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 2px;
+  }
 
-.jj-image-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(0, 0, 0, 0.4);
-    color: #fff;
-    font-size: 18px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
-    z-index: 10;
-}
-
-.jj-image-nav--prev {
-    left: 12px;
-}
-
-.jj-image-nav--next {
-    right: 12px;
-}
-
-.jj-image-nav:focus {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
+  // On very small screens, give a bit more vertical separation
+  @media screen and (max-width: 600px) {
+    .productView-options .form-field[data-product-attribute='swatch'] {
+      padding-bottom: 0.75rem;
+      margin-bottom: 1rem;
+    }
+  }
 }
