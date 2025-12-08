@@ -1,6 +1,6 @@
 /*
  Import all product specific js
- */
+*/
 import PageManager from './page-manager';
 import Review from './product/reviews';
 import collapsibleFactory from './common/collapsible';
@@ -9,6 +9,52 @@ import videoGallery from './product/video-gallery';
 import rootsLoaded from './roots/product';
 import { classifyForm } from './common/utils/form-utils';
 import modalFactory from './global/modal';
+
+/**
+ * JJ – Keep the selected COLOR swatch visible in its horizontal strip.
+ * Works for both direct clicks and gallery-arrow changes, since both
+ * ultimately change the checked radio.
+ */
+function jjInitSwatchAutoScroll() {
+    // Only target the Color group: first swatch field in product options
+    const colorField = document.querySelector(
+        '.productView-options .form-field[data-product-attribute="swatch"]',
+    );
+
+    if (!colorField) return;
+
+    const container = colorField; // we gave this overflow-x in SCSS
+
+    function scrollActiveIntoView() {
+        const activeOption = colorField.querySelector(
+            'input.form-radio:checked + .form-option',
+        );
+        if (!activeOption) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const targetRect = activeOption.getBoundingClientRect();
+
+        const overflowLeft = targetRect.left - containerRect.left;
+        const overflowRight = targetRect.right - containerRect.right;
+
+        // If it sticks out left, nudge left; if it sticks out right, nudge right.
+        if (overflowLeft < 0) {
+            container.scrollLeft += overflowLeft;
+        } else if (overflowRight > 0) {
+            container.scrollLeft += overflowRight;
+        }
+    }
+
+    // Initial pass (handles default color when page first loads)
+    // Slight timeout so BC's own JS has finished applying classes.
+    setTimeout(scrollActiveIntoView, 0);
+
+    // Any time the color swatch selection changes, keep it visible.
+    colorField.addEventListener('change', () => {
+        // Again, let the core JS finish first.
+        setTimeout(scrollActiveIntoView, 0);
+    });
+}
 
 export default class Product extends PageManager {
     constructor(context) {
@@ -22,8 +68,15 @@ export default class Product extends PageManager {
     onReady() {
         // Listen for foundation modal close events to sanitize URL after review.
         $(document).on('close.fndtn.reveal', () => {
-            if (this.url.indexOf('#write_review') !== -1 && typeof window.history.replaceState === 'function') {
-                window.history.replaceState(null, document.title, window.location.pathname);
+            if (
+                this.url.indexOf('#write_review') !== -1 &&
+                typeof window.history.replaceState === 'function'
+            ) {
+                window.history.replaceState(
+                    null,
+                    document.title,
+                    window.location.pathname,
+                );
             }
         });
 
@@ -32,12 +85,19 @@ export default class Product extends PageManager {
         // Init collapsible
         collapsibleFactory();
 
-        this.productDetails = new ProductDetails($('.productView'), this.context, window.BCData.product_attributes);
+        this.productDetails = new ProductDetails(
+            $('.productView'),
+            this.context,
+            window.BCData.product_attributes,
+        );
         this.productDetails.setProductVariant();
 
         videoGallery();
 
         this.bulkPricingHandler();
+
+        // JJ: keep the active COLOR swatch in view when it changes
+        jjInitSwatchAutoScroll();
 
         const $reviewForm = classifyForm('.writeReview-form');
 
@@ -58,6 +118,7 @@ export default class Product extends PageManager {
 
             return false;
         });
+
         rootsLoaded();
 
         this.productReviewHandler();
@@ -85,6 +146,7 @@ export default class Product extends PageManager {
         }
     }
 }
+
 // JJ – image nav arrows controlling color swatches
 $(document).ready(() => {
     const $imgContainer = $('.productView-img-container');
@@ -156,59 +218,5 @@ $(document).ready(() => {
     $imgContainer.on('click', '.jj-image-nav--next', (event) => {
         event.preventDefault();
         moveColor(1);
-    });
-});
-// JJ: gallery arrows cycle the first swatch field (usually Color)
-$(document).ready(() => {
-    const $colorField = $('.productView-options .form-field[data-product-attribute="swatch"]').first();
-    if (!$colorField.length) return;
-
-    const $colorInputs = $colorField.find('input.form-radio');
-    if ($colorInputs.length <= 1) return;
-
-    const container = $colorField.get(0);
-
-    function scrollIntoView($input) {
-        if (!container) return;
-        const chip = $input.closest('.form-option-wrapper').get(0);
-        if (!chip) return;
-
-        const chipLeft = chip.offsetLeft;
-        const chipRight = chipLeft + chip.offsetWidth;
-        const viewLeft = container.scrollLeft;
-        const viewRight = viewLeft + container.clientWidth;
-
-        if (chipLeft < viewLeft) {
-            container.scrollLeft = chipLeft - 8;
-        } else if (chipRight > viewRight) {
-            container.scrollLeft = chipRight - container.clientWidth + 8;
-        }
-    }
-
-    function currentIndex() {
-        const $checked = $colorInputs.filter(':checked');
-        const idx = $colorInputs.index($checked);
-        return idx === -1 ? 0 : idx;
-    }
-
-    function selectIndex(newIdx) {
-        const count = $colorInputs.length;
-        const idx = ((newIdx % count) + count) % count; // wrap around
-        const $target = $colorInputs.eq(idx);
-        if (!$target.length) return;
-
-        // This click lets BigCommerce handle all the pricing / image swap
-        $target.trigger('click');
-        scrollIntoView($target);
-    }
-
-    $('.jj-gallery-arrow--prev').on('click', (event) => {
-        event.preventDefault();
-        selectIndex(currentIndex() - 1);
-    });
-
-    $('.jj-gallery-arrow--next').on('click', (event) => {
-        event.preventDefault();
-        selectIndex(currentIndex() + 1);
     });
 });
