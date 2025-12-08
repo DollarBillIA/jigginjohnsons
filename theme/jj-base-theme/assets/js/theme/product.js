@@ -18,7 +18,7 @@ import modalFactory from './global/modal';
 function jjInitSwatchAutoScroll() {
     // Only target the Color group: first swatch field in product options
     const colorField = document.querySelector(
-        '.productView-options .form-field[data-product-attribute="swatch"]',
+        '.productView-options .form-field[data-product-attribute="swatch"]'
     );
 
     if (!colorField) return;
@@ -27,7 +27,7 @@ function jjInitSwatchAutoScroll() {
 
     function scrollActiveIntoView() {
         const activeOption = colorField.querySelector(
-            'input.form-radio:checked + .form-option',
+            'input.form-radio:checked + .form-option'
         );
         if (!activeOption) return;
 
@@ -75,7 +75,7 @@ export default class Product extends PageManager {
                 window.history.replaceState(
                     null,
                     document.title,
-                    window.location.pathname,
+                    window.location.pathname
                 );
             }
         });
@@ -88,7 +88,7 @@ export default class Product extends PageManager {
         this.productDetails = new ProductDetails(
             $('.productView'),
             this.context,
-            window.BCData.product_attributes,
+            window.BCData.product_attributes
         );
         this.productDetails.setProductVariant();
 
