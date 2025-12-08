@@ -1,92 +1,153 @@
-// JJ PRODUCT TWEAKS
-// ==================
-// Scope everything to product pages so other templates stay safe.
+// JJ PRODUCT OVERRIDES
+// ====================
+//
+// Goal:
+// - Keep BigCommerce’s stock markup + JS.
+// - Make swatch options (color + scent) behave like horizontal strips
+//   with scroll.
+// - Restyle the gallery arrows so they’re visible and centered on the image
+//   (these are still the native Slick arrows, just prettier).
 
-.page-type-product {
+// ------------------------------------------------------------
+// HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
+// ------------------------------------------------------------
+//
+// Targets markup like:
+//
+// <div class="productView-options">
+//   <div class="form-field" data-product-attribute="swatch">
+//     <label class="form-label">Color …</label>
+//     <div class="form-option-wrapper">…</div>
+//     <div class="form-option-wrapper">…</div>
+//     ...
+//   </div>
+// </div>
+//
+// This will:
+// - Put all swatches in one horizontal row.
+// - Allow sideways scroll if they don’t all fit.
+// - Size tiles to ~64px so you get ~6 per row on desktop.
 
-  // ------------------------------------------------------------
-  // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
-  // ------------------------------------------------------------
-  //
-  // BigCommerce markup (simplified):
-  // <div class="form-field" data-product-attribute="swatch">
-  //   <label class="form-label">...</label>
-  //   <div class="form-option-wrapper">…</div>
-  //   <div class="form-option-wrapper">…</div>
-  //   ...
-  // </div>
-  //
-  // Strategy:
-  // - Make the .form-field itself a horizontal scroll container.
-  // - Keep the label on its own line.
-  // - Render each .form-option-wrapper as inline-block so they
-  //   sit in a single row and overflow horizontally.
-  // - Size the swatch boxes ~64px so you get ~6 across on desktop.
+.productView-options .form-field[data-product-attribute='swatch'] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
 
+// Label (e.g. “COLOR: BLOODY MOTOR OIL *”) stays on its own line
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  > .form-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  white-space: normal;
+}
+
+// Each swatch tile wrapper -> inline-block so they line up horizontally
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 0.25rem 0 0;
+}
+
+// Clickable area
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+// Image box (the small square icon)
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-variant {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+}
+
+// Expanded preview image – keep same size so we don’t get jumps
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-image {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+}
+
+// Slightly nicer scrollbar when needed
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
+  height: 4px;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 600px) {
   .productView-options .form-field[data-product-attribute='swatch'] {
-    // container row
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
-    padding-bottom: 0.5rem;
-    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
   }
+}
 
-  // label (e.g. "Color: Bloody Motor Oil *")
-  .productView-options .form-field[data-product-attribute='swatch'] > .form-label {
-    display: block;
-    margin-bottom: 0.25rem;
-    white-space: normal; // allow label text to wrap
-  }
+// ------------------------------------------------------------
+// GALLERY ARROWS (USE BC/SLICK ARROWS, JUST STYLE THEM)
+// ------------------------------------------------------------
 
-  // each swatch “tile” wrapper
-  .productView-options .form-field[data-product-attribute='swatch'] .form-option-wrapper {
-    display: inline-block;
-    vertical-align: top;
-    margin: 0 0.25rem 0 0; // horizontal gap between tiles
-  }
+.productView-images {
+  position: relative;
+}
 
-  // clickable area around the image
-  .productView-options .form-field[data-product-attribute='swatch'] .form-option {
-    border-radius: 4px;
-    overflow: hidden;
-  }
+// Base arrow styling
+.productView-images .slick-prev,
+.productView-images .slick-next {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.08);
+  color: #555;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
 
-  // actual image box
-  .productView-options .form-field[data-product-attribute='swatch'] .form-option-variant {
-    width: 64px;
-    height: 64px;
-    background-size: cover;
-    background-position: center;
-  }
+// Left/right positioning
+.productView-images .slick-prev {
+  left: 0.75rem;
+}
 
-  // make the “expanded” preview match the same size
-  .productView-options .form-field[data-product-attribute='swatch'] .form-option-image {
-    width: 64px;
-    height: 64px;
-    background-size: cover;
-    background-position: center;
-  }
+.productView-images .slick-next {
+  right: 0.75rem;
+}
 
-  // subtle scrollbar look on WebKit so it doesn’t feel broken
-  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
-    height: 4px;
-  }
+// Use Slick’s pseudo-element for the actual arrow glyph
+.productView-images .slick-prev:before,
+.productView-images .slick-next:before {
+  font-size: 18px;
+  color: inherit;
+}
 
-  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .productView-options .form-field[data-product-attribute='swatch']::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.15);
-    border-radius: 2px;
-  }
-
-  // On very small screens, give a bit more vertical separation
-  @media screen and (max-width: 600px) {
-    .productView-options .form-field[data-product-attribute='swatch'] {
-      padding-bottom: 0.75rem;
-      margin-bottom: 1rem;
-    }
-  }
+// Slight hover feedback
+.productView-images .slick-prev:hover,
+.productView-images .slick-next:hover {
+  background: rgba(0, 0, 0, 0.18);
 }
