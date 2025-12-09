@@ -146,34 +146,6 @@
 
             {{{region name="product_below_price"}}}
 
-            {{!-- Rating block stays here for now; we can later merge it into the topline if you want --}}
-            <div class="productView-rating">
-                {{#if settings.show_product_rating}}
-                    {{> components/products/ratings rating=product.rating}}
-                    {{#if product.num_reviews '>' 0}}
-                        <a href="{{product.url}}{{#if is_ajax}}#product-reviews{{/if}}" id="productReview_link">
-                            {{lang 'products.reviews.link_to_review' total=product.num_reviews}}
-                        </a>
-                    {{else}}
-                        <span>{{lang 'products.reviews.link_to_review' total=product.num_reviews}}</span>
-                    {{/if}}
-                {{/if}}
-                {{#if settings.show_product_reviews}}
-                    <button class="productView-reviewLink productView-reviewLink--new">
-                        <a href="{{product.url}}{{#if is_ajax}}#write_review{{/if}}"
-                            {{#unless is_ajax}}data-reveal-id="modal-review-form"{{/unless}}
-                            role="button"
-                        >
-                           <i class="icon" aria-hidden="true" style="position: relative; top: -1px;">
-                                <svg><use xlink:href="#icon-plus" /></svg>
-                            </i>
-                           <strong style="text-decoration: underline;">{{lang 'products.reviews.new'}}</strong>
-                        </a>
-                    </button>
-                    {{> components/products/modals/writeReview}}
-                {{/if}}
-            </div>
-
             <div class="productView-specs">
             {{#all product.weight theme_settings.show_product_weight}}
                 <div class="productView-info">
@@ -307,6 +279,35 @@
                     <span class="button button--primary button--out-of-stock">Out of Stock</span>
                 {{/if}}
             </form>
+
+            {{!-- JJ: move rating + write-a-review BELOW Add to Cart --}}
+            <div class="productView-rating jj-rating-below-cart">
+                {{#if settings.show_product_rating}}
+                    {{> components/products/ratings rating=product.rating}}
+                    {{#if product.num_reviews '>' 0}}
+                        <a href="{{product.url}}{{#if is_ajax}}#product-reviews{{/if}}" id="productReview_link">
+                            {{lang 'products.reviews.link_to_review' total=product.num_reviews}}
+                        </a>
+                    {{else}}
+                        <span>{{lang 'products.reviews.link_to_review' total=product.num_reviews}}</span>
+                    {{/if}}
+                {{/if}}
+                {{#if settings.show_product_reviews}}
+                    <button class="productView-reviewLink productView-reviewLink--new">
+                        <a href="{{product.url}}{{#if is_ajax}}#write_review{{/if}}"
+                            {{#unless is_ajax}}data-reveal-id="modal-review-form"{{/unless}}
+                            role="button"
+                        >
+                           <i class="icon" aria-hidden="true" style="position: relative; top: -1px;">
+                                <svg><use xlink:href="#icon-plus" /></svg>
+                            </i>
+                           <strong style="text-decoration: underline;">{{lang 'products.reviews.new'}}</strong>
+                        </a>
+                    </button>
+                    {{> components/products/modals/writeReview}}
+                {{/if}}
+            </div>
+
             {{#if settings.show_wishlist}}
                 {{> components/common/wishlist-dropdown}}
             {{/if}}
