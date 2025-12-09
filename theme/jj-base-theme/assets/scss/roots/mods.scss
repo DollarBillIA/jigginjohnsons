@@ -2699,3 +2699,140 @@ li.pagination-item--previous a{
         text-align: center;
     }
 }
+/* =========================================================
+   JJ PRODUCT PAGE REFINEMENTS (ROOTS)
+   Applies to standard Roots product page (Jiggin Johnson's).
+   ========================================================= */
+
+/* 1) Slightly wider product canvas on desktop */
+.page-type-product .productView {
+    max-width: 1160px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 2) Top line: brand / price layout + smaller title */
+.page-type-product .jj-topline {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.page-type-product .jj-topline-brand {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+}
+
+.page-type-product .jj-topline-price {
+    margin-left: auto;            /* pushes price all the way right */
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* Title: a bit smaller + tighter spacing */
+.page-type-product .jj-product-title {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .page-type-product .jj-product-title {
+        font-size: 1.5rem;        /* encourages 2–3 lines instead of giant text */
+        line-height: 1.25;
+        margin-top: 0.35rem;
+        margin-bottom: 0.35rem;
+    }
+
+    /* Reduce space between gallery and content on mobile */
+    .page-type-product .productView-images {
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* 3) Add-to-cart button: Amazon-style yellow, more premium */
+.page-type-product .productView-options .button--primary {
+    background-color: #ffb93a;    /* amazon-ish yellow */
+    border-color: #e0a52f;
+    color: #111 !important;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.85rem 2.5rem;
+}
+
+.page-type-product .productView-options .button--primary:hover,
+.page-type-product .productView-options .button--primary:focus {
+    background-color: #f0a723;
+    border-color: #c28a1c;
+    color: #111;
+}
+
+/* 4) Availability + custom fields block under Add to Cart */
+.page-type-product .jj-post-cart-meta {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #555;
+}
+
+.page-type-product .jj-meta-row {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.page-type-product .jj-meta-label {
+    font-weight: 600;
+}
+
+/* 5) Keep COLOR / ADD SCENT labels fixed while the swatches scroll */
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] {
+    position: relative;
+    overflow-x: auto;          /* gives us the horizontal scroll bar */
+    padding-bottom: 0.4rem;
+}
+
+/* Label “sticks” to the left edge, swatches slide under it */
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-label {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: #fff;
+    padding-right: 0.75rem;
+}
+
+/* 6) Make the horizontal scrollbar a bit thicker + rounded (WebKit) */
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
+    height: 10px;         /* default is ~6px – this is ~50% thicker */
+}
+
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 999px;
+}
+
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 999px;
+}
+
+/* 7) Tighten vertical rhythm around options so image + swatches 
+      are more likely to share the screen on mobile */
+.page-type-product .productView-options {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .page-type-product .productView-options {
+        margin-top: 0.25rem;
+    }
+}
