@@ -1,255 +1,245 @@
-// JJ PRODUCT OVERRIDES
-// ====================
+/* ==========================================================================
+   JJ PRODUCT OVERRIDES
+   Scoped to standard productView layout
+   ========================================================================== */
 
-// ------------------------------------------------------------
-// HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
-// ------------------------------------------------------------
+/* -------------------------------
+   Overall layout tweaks
+   ------------------------------- */
 
-.productView-options .form-field[data-product-attribute='swatch'] {
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
+.productView {
+    /* Top line: brand + price */
+    .jj-topline {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .jj-topline-brand {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .jj-topline-price {
+        margin-left: auto;
+        text-align: right;
+    }
+
+    .jj-topline-price .price-section {
+        font-size: 1.4rem;
+        font-weight: 700;
+        line-height: 1.1;
+    }
+
+    /* Title – desktop-ish defaults */
+    .jj-product-title {
+        font-size: 1.9rem;
+        line-height: 1.2;
+        margin-top: 0.15rem;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Availability / custom fields block under Add to Cart */
+    .jj-post-cart-meta {
+        margin-top: 0.75rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding-top: 0.5rem;
+    }
+
+    .jj-meta-row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: baseline;
+        font-size: 0.875rem;
+        margin-bottom: 0.15rem;
+        column-gap: 0.35rem;
+    }
+
+    .jj-meta-label {
+        font-weight: 600;
+        opacity: 0.85;
+    }
+
+    .jj-meta-value {
+        opacity: 0.95;
+    }
+
+    /* Rating block moved under Add to Cart */
+    .jj-rating-below-cart {
+        margin-top: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 0.75rem;
+        align-items: center;
+        font-size: 0.875rem;
+    }
 }
 
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  > .form-label {
-  display: block;
-  margin-bottom: 0.25rem;
-  white-space: normal;
-}
+/* -------------------------------
+   Image arrows over main image
+   ------------------------------- */
 
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  .form-option-wrapper {
-  display: inline-block;
-  vertical-align: top;
-  margin: 0 0.25rem 0 0;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  .form-option {
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  .form-option-variant {
-  width: 64px;
-  height: 64px;
-  background-size: cover;
-  background-position: center;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  .form-option-image {
-  width: 64px;
-  height: 64px;
-  background-size: cover;
-  background-position: center;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
-  height: 7px;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
-}
-
-@media screen and (max-width: 600px) {
-  .productView-options .form-field[data-product-attribute='swatch'] {
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
-  }
-}
-
-// ------------------------------------------------------------
-// CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
-// ------------------------------------------------------------
-
-.productView-images {
-  position: relative;
+.productView-img-container {
+    position: relative;
 }
 
 .jj-gallery-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  border: none;
-  background: rgba(0, 0, 0, 0.08);
-  color: #444;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 5;
-  padding: 0;
-  font-size: 18px;
-  line-height: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: rgba(0, 0, 0, 0.15);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: #ffffff;
+    padding: 0;
+    transition: background 0.15s ease, transform 0.1s ease;
+    z-index: 2;
 }
 
 .jj-gallery-arrow--prev {
-  left: 0.75rem;
+    left: 0.35rem;
 }
 
 .jj-gallery-arrow--next {
-  right: 0.75rem;
+    right: 0.35rem;
 }
 
-.jj-gallery-arrow:hover {
-  background: rgba(0, 0, 0, 0.18);
+.jj-gallery-arrow:hover,
+.jj-gallery-arrow:focus-visible {
+    background: rgba(0, 0, 0, 0.35);
+    transform: translateY(-50%) scale(1.03);
 }
 
-.jj-gallery-arrow:focus {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+/* -------------------------------
+   Swatch rows: horizontal slider
+   ------------------------------- */
+
+.productView-options .form-field[data-product-attribute="swatch"] {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 0.45rem; /* space for thicker scrollbar */
+    margin-bottom: 0.75rem;
 }
 
-@media (max-width: 768px) {
-  .jj-gallery-arrow {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
-  }
-}
-// ============================================================================
-// JJ PRODUCT VIEW POLISH
-// ============================================================================
-
-// 1) Wider canvas on product pages
-.page-type-product {
-    .container {
-        max-width: 1320px; // a bit wider than stock Roots
-    }
+/* Each swatch wrapper becomes an inline “chip” */
+.productView-options .form-field[data-product-attribute="swatch"] .form-option-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 0.25rem;
 }
 
-// 2) Card shell + subtle background
-.page-type-product .productView {
-    margin-top: 2rem;
-    background: #ffffff;
-    border-radius: 6px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
-    padding: 2rem 2.5rem;
-
-    @media (max-width: 800px) {
-        padding: 1.5rem 1.25rem;
-        box-shadow: none;
-        border-radius: 0;
-    }
+/* Keep the internal swatch size consistent with your 65px look */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch
+    .form-option-variant {
+    width: 65px;
+    height: 65px;
+    border-radius: 0.4rem;
 }
 
-// 3) Topline: brand + price row
-.page-type-product .productView .jj-topline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.35rem;
+/* Selected swatch outlined a bit more boldly */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    input.form-radio:checked
+    + .form-option-swatch {
+    box-shadow: 0 0 0 2px #21561f;
 }
 
-.page-type-product .productView .jj-topline-brand {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: #fafafa;
-    a {
-        color: inherit;
-    }
+/* Thicker horizontal scrollbar (WebKit / Chromium only) */
+.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
+    height: 10px; /* thicker than default (~50% bump) */
 }
 
-.page-type-product .productView .jj-topline-price {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-// Title slightly toned down vs price
-.page-type-product .productView .jj-product-title {
-    font-size: 1.75rem;
-    line-height: 1.25;
-    margin: 0.25rem 0 1rem;
-}
-
-// 4) Amazon-style primary Add to Cart (scoped to product page)
-$page-amazon-yellow: #ffbf00;
-$page-amazon-yellow-hover: #f0a800;
-
-.page-type-product .productView-options .button.button--primary {
-    background-color: $page-amazon-yellow;
-    border-color: darken($page-amazon-yellow, 12%);
-    color: #111;
-    font-weight: 700;
-    text-transform: none;
-}
-
-.page-type-product .productView-options .button.button--primary:hover,
-.page-type-product .productView-options .button.button--primary:focus {
-    background-color: $page-amazon-yellow-hover;
-    border-color: darken($page-amazon-yellow-hover, 12%);
-    color: #111;
-}
-
-// 5) Availability + custom fields strip under cart
-.jj-post-cart-meta {
-    margin-top: 0.9rem;
-    padding-top: 0.9rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-    display: grid;
-    gap: 0.15rem;
-    font-size: 0.85rem;
-}
-
-.jj-post-cart-meta .jj-meta-row {
-    display: flex;
-    gap: 0.4rem;
-}
-
-.jj-post-cart-meta .jj-meta-label {
-    font-weight: 600;
-    color: #444;
-}
-
-.jj-post-cart-meta .jj-meta-value {
-    color: #555;
-}
-
-// 6) Slightly thicker custom horizontal scroll track under swatches
-.page-type-product .productView-options
-.form-field[data-product-attribute="swatch"] {
-    scrollbar-width: thin;
-}
-
-.page-type-product .productView-options
-.form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
-    height: 6px; // was ~4px, now ~50% thicker
-}
-
-.page-type-product .productView-options
-.form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.04);
+    border-radius: 999px;
 }
 
-.page-type-product .productView-options
-.form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.24);
+.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
     border-radius: 999px;
+}
+
+/* Fallback for non-WebKit browsers – use a subtle bottom border as a “track” cue */
+.productView-options .form-field[data-product-attribute="swatch"] {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* -------------------------------
+   MOBILE-FIRST TIGHTENING
+   Keep image + sliders in same viewport
+   ------------------------------- */
+
+@media (max-width: 767px) {
+    .productView {
+        /* Reduce gap beneath the main image */
+        .productView-images {
+            margin-bottom: 0.35rem;
+        }
+
+        .productView-image {
+            margin-bottom: 0.25rem;
+        }
+
+        .productView-img-container {
+            padding-bottom: 0.25rem;
+        }
+
+        /* Smaller title so it wraps to ~2 lines max more often */
+        .jj-product-title {
+            font-size: 1.45rem;
+            line-height: 1.2;
+            margin-top: 0.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        /* Tighten the vertical space between title and swatches */
+        .productView-options {
+            margin-top: 0.25rem;
+        }
+
+        .productView-options .form-field[data-product-attribute="swatch"] {
+            margin-top: 0.15rem;
+            margin-bottom: 0.55rem;
+        }
+
+        /* Slightly smaller top-line text on mobile to reduce height */
+        .jj-topline-brand {
+            font-size: 0.8rem;
+        }
+
+        .jj-topline-price .price-section {
+            font-size: 1.25rem;
+        }
+    }
+}
+
+/* -------------------------------
+   Slightly wider feel on larger viewports
+   (optional nudge to echo the mockup’s “wider” layout)
+   ------------------------------- */
+
+@media (min-width: 992px) {
+    .productView {
+        max-width: 1150px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .productView-details.product-data {
+        padding-left: 2rem;
+    }
 }
