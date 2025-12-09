@@ -2867,3 +2867,43 @@ li.pagination-item--previous a{
     background-position: center;
     background-repeat: no-repeat;
 }
+/* JJ — Keep COLOR and SCENT labels fixed; only their swatch strips scroll */
+
+.page-type-product .productView-options .form-field {
+    overflow-x: visible !important;
+}
+
+.page-type-product .productView-options [data-product-attribute="swatch"] {
+    display: block;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    white-space: nowrap;
+    padding-bottom: 0.4rem;
+}
+
+/* Ensure labels remain visible and not part of the scroll area */
+.page-type-product .productView-options .form-label {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+/* JJ — Swatch/Scent buttons: ensure full icon visibility */
+.page-type-product [data-product-attribute="swatch"] .form-option {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+.page-type-product [data-product-attribute="swatch"] .form-option-variant img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.page-type-product [data-product-attribute="swatch"] .form-option-variant {
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
