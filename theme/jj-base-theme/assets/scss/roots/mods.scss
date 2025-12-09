@@ -2871,3 +2871,20 @@ li.pagination-item--previous a{
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
+/* JJ – Keep main gallery arrows clickable above everything */
+.page-type-product .productView-image .slick-prev,
+.page-type-product .productView-image .slick-next {
+    z-index: 20;
+    pointer-events: auto;
+}
+... end of your existing mods.scss content ...
+
+/* JJ – Keep main gallery arrows clickable */
+.page-type-product .productView-image .slick-prev,
+.page-type-product .productView-image .slick-next {
+    z-index: 20;
+    pointer-events: auto;
+}
+
+/* JJ — COLOR / SCENT swatch strip (v2) */
+... full block ...
