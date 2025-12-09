@@ -2789,50 +2789,81 @@ li.pagination-item--previous a{
     font-weight: 600;
 }
 
-/* 5) Keep COLOR / ADD SCENT labels fixed while the swatches scroll */
+/* 5) COLOR / ADD SCENT: label stays fixed, only the buttons scroll */
 .page-type-product .productView-options
     .form-field[data-product-attribute="swatch"] {
-    position: relative;
-    overflow-x: auto;          /* gives us the horizontal scroll bar */
+    overflow: visible;                 // let inner wrapper handle scroll
+}
+
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-label {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+/* The row of buttons becomes the actual horizontal scroller.
+   This hits both common Roots patterns: .form-field-control and .form-radio */
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-field-control,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-radio,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-option-wrapper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
     padding-bottom: 0.4rem;
 }
 
-/* Label “sticks” to the left edge, swatches slide under it */
+/* 6) Thicker, rounded horizontal scrollbar (WebKit) */
 .page-type-product .productView-options
-    .form-field[data-product-attribute="swatch"] .form-label {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background: #fff;
-    padding-right: 0.75rem;
-}
-
-/* 6) Make the horizontal scrollbar a bit thicker + rounded (WebKit) */
+    .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar,
 .page-type-product .productView-options
-    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
-    height: 10px;         /* default is ~6px – this is ~50% thicker */
+    .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar {
+    height: 10px;
 }
 
 .page-type-product .productView-options
-    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+    .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar-track,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar-track {
     background: #f3f3f3;
     border-radius: 999px;
 }
 
 .page-type-product .productView-options
-    .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+    .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar-thumb,
+.page-type-product .productView-options
+    .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar-thumb {
     background: #c7c7c7;
     border-radius: 999px;
 }
 
-/* 7) Tighten vertical rhythm around options so image + swatches 
-      are more likely to share the screen on mobile */
-.page-type-product .productView-options {
-    margin-top: 0.5rem;
+/* 7) Make swatch/scent buttons big enough and keep images inside them */
+.page-type-product [data-product-attribute="swatch"] .form-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;          // tweak if you want larger/smaller
+    height: 60px;
+    padding: 0;
 }
 
-@media (max-width: 767px) {
-    .page-type-product .productView-options {
-        margin-top: 0.25rem;
-    }
+/* If the icon is an <img>, keep it fully visible */
+.page-type-product [data-product-attribute="swatch"] .form-option-variant img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* If the icon is a background-image on the variant, don’t crop it weirdly */
+.page-type-product [data-product-attribute="swatch"] .form-option-variant {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }

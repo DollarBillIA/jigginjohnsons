@@ -23,12 +23,22 @@ function jjInitSwatchAutoScroll() {
 
     if (!colorField) return;
 
-    const container = colorField; // we gave this overflow-x in SCSS
+    // IMPORTANT: scroll only the inner swatch strip so the label stays put
+    const container =
+        colorField.querySelector('.form-field-control') || colorField;
 
     function scrollActiveIntoView() {
-        const activeOption = colorField.querySelector(
+        // Swatch markup is "input + .form-option" inside the container
+        let activeOption = container.querySelector(
             'input.form-radio:checked + .form-option',
         );
+
+        // Fallback: search from the field if for some reason it's outside
+        if (!activeOption) {
+            activeOption = colorField.querySelector(
+                'input.form-radio:checked + .form-option',
+            );
+        }
         if (!activeOption) return;
 
         const containerRect = container.getBoundingClientRect();
