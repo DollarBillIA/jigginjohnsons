@@ -2789,63 +2789,128 @@ li.pagination-item--previous a{
     font-weight: 600;
 }
 
-/* JJ — COLOR / SCENT swatch strip: label fixed, buttons scroll, icons fully visible */
+/* =========================================================
+   JJ PRODUCT PAGE REFINEMENTS (ROOTS)
+   Applies to standard Roots product page (Jiggin Johnson's).
+   ========================================================= */
 
-/* Outer field: never scrolls */
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] {
-    overflow: visible !important;
+/* 1) Slightly wider product canvas on desktop */
+.page-type-product .productView {
+    max-width: 1160px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Label stays above the strip */
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-label {
-    display: block;
+/* 2) Top line: brand / price layout + smaller title */
+.page-type-product .jj-topline {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
     margin-bottom: 0.35rem;
 }
 
-/* The row that actually holds the swatch buttons scrolls horizontally.
-   This hits both Roots patterns: .form-field-control, .form-radio, .form-option-wrapper */
+.page-type-product .jj-topline-brand {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #777;
+}
+
+.page-type-product .jj-topline-price {
+    margin-left: auto;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* Title: a bit smaller + tighter spacing */
+.page-type-product .jj-product-title {
+    font-size: 1.75rem;
+    line-height: 1.25;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .page-type-product .jj-product-title {
+        font-size: 1.5rem;
+        line-height: 1.25;
+        margin-top: 0.35rem;
+        margin-bottom: 0.35rem;
+    }
+
+    /* Reduce space between gallery and content on mobile */
+    .page-type-product .productView-images {
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* 3) Add-to-cart button: Amazon-style yellow, more premium */
+.page-type-product .productView-options .button--primary {
+    background-color: #ffb93a;    /* amazon-ish yellow */
+    border-color: #e0a52f;
+    color: #111 !important;
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.85rem 2.5rem;
+}
+
+.page-type-product .productView-options .button--primary:hover,
+.page-type-product .productView-options .button--primary:focus {
+    background-color: #f0a723;
+    border-color: #c28a1c;
+    color: #111;
+}
+
+/* 4) Availability + custom fields block under Add to Cart */
+.page-type-product .jj-post-cart-meta {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: #555;
+}
+
+.page-type-product .jj-meta-row {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.page-type-product .jj-meta-label {
+    font-weight: 600;
+}
+
+/* 5) JJ — COLOR / SCENT swatch strip: label fixed, buttons scroll, icons fully visible */
+
+/* Outer field: horizontal flex row that scrolls */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control,
+  .form-field[data-product-attribute="swatch"] {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25rem 0 0.5rem;
+    column-gap: 0.5rem;
+}
+
+/* Label stays “pinned” at the left edge while the rest of the row scrolls */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-radio,
+  .form-field[data-product-attribute="swatch"] .form-label {
+    position: sticky;
+    left: 0;
+    flex: 0 0 auto;
+    margin: 0;
+    margin-right: 0.5rem;
+    white-space: nowrap;
+    background: #ffffff;
+    z-index: 2;
+}
+
+/* Each swatch wrapper is a fixed chip in the row */
 .page-type-product .productView-options
   .form-field[data-product-attribute="swatch"] .form-option-wrapper {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    white-space: nowrap;
-    padding-bottom: 0.4rem;
-}
-
-/* Thicker, rounded horizontal scrollbar (WebKit) */
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar {
-    height: 10px;
-}
-
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar-track,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar-track {
-    background: #f3f3f3;
-    border-radius: 999px;
-}
-
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-radio::-webkit-scrollbar-thumb,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-option-wrapper::-webkit-scrollbar-thumb {
-    background: #c7c7c7;
-    border-radius: 999px;
+    flex: 0 0 auto;
+    margin-right: 0.25rem;
 }
 
 /* Swatch/Scent buttons: consistent size, full icon visibility */
@@ -2865,24 +2930,34 @@ li.pagination-item--previous a{
     max-height: 100%;
 }
 
-/* If the icon is a background-image on the variant, don’t crop it weirdly */
+/* If the icon is a background-image on the variant, don't crop it */
 .page-type-product [data-product-attribute="swatch"] .form-option-variant {
     background-size: contain !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
+
+/* Optional: slightly nicer horizontal scrollbar for the whole strip */
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
+    height: 10px;
+}
+
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 999px;
+}
+
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+    border-radius: 999px;
+}
+
 /* JJ – Keep main gallery arrows clickable above everything */
 .page-type-product .productView-image .slick-prev,
 .page-type-product .productView-image .slick-next {
     z-index: 20;
     pointer-events: auto;
 }
-
-/* JJ – Keep main gallery arrows clickable */
-.page-type-product .productView-image .slick-prev,
-.page-type-product .productView-image .slick-next {
-    z-index: 20;
-    pointer-events: auto;
-}
-
-/* JJ — COLOR / SCENT swatch strip (v2) */
