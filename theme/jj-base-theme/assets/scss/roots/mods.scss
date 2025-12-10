@@ -59,7 +59,7 @@ $carousel-textColor: stencilColor("carousel-description-color");
 $carousel-textBackground: stencilColor("carousel-bgColor");
 $carousel-textBackgroundOpacity: stencilNumber("carousel-textBgOpacity", "");
 $carousel-ArrowBackground: stencilColor("carousel-arrow-bgColor");
-$carousel-ArrowBackgroundOpacity: stencilNumber("carousel-arrow-bgOpacity", "");
+$carousel-ArrowBackgroundOpacity: stencilNumber("carousel-arrowBgOpacity", "");
 $carousel-button-color: stencilColor("carousel-button-color");
 $carousel-button-border-color: stencilColor("carousel-button-border-color");
 
@@ -1477,12 +1477,11 @@ li.pagination-item--previous a{
 :root {
     --add-to-cart-button-width: 100%;
     @include breakpoint(medium) {
-    --add-to-cart-button-width: 80%;
+        --add-to-cart-button-width: 80%;
     }
     @include breakpoint(large) {
         --add-to-cart-button-width: 60%;
-        }
-    
+    }
 }
 
 .productView-options .add-to-cart-buttons {
@@ -1490,11 +1489,11 @@ li.pagination-item--previous a{
     gap: 1rem;
     width: var(--add-to-cart-button-width);
     float: none;
+
     .form-action {
         width: 100%;
         margin: 0;
     }
-
 
     .add-to-cart-wallet-buttons{ 
         margin-top: 0;
@@ -2062,6 +2061,7 @@ li.pagination-item--previous a{
     
     .footer-info-heading .icon{display: none;}
 }
+
 @media only screen and (max-width: 800px) {
     body{
         padding-top: $init_header_height_mobile;
@@ -2699,95 +2699,6 @@ li.pagination-item--previous a{
         text-align: center;
     }
 }
-/* =========================================================
-   JJ PRODUCT PAGE REFINEMENTS (ROOTS)
-   Applies to standard Roots product page (Jiggin Johnson's).
-   ========================================================= */
-
-/* 1) Slightly wider product canvas on desktop */
-.page-type-product .productView {
-    max-width: 1160px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* 2) Top line: brand / price layout + smaller title */
-.page-type-product .jj-topline {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.35rem;
-}
-
-.page-type-product .jj-topline-brand {
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #777;
-}
-
-.page-type-product .jj-topline-price {
-    margin-left: auto;            /* pushes price all the way right */
-    font-size: 1.125rem;
-    font-weight: 600;
-}
-
-/* Title: a bit smaller + tighter spacing */
-.page-type-product .jj-product-title {
-    font-size: 1.75rem;
-    line-height: 1.25;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-@media (max-width: 767px) {
-    .page-type-product .jj-product-title {
-        font-size: 1.5rem;        /* encourages 2–3 lines instead of giant text */
-        line-height: 1.25;
-        margin-top: 0.35rem;
-        margin-bottom: 0.35rem;
-    }
-
-    /* Reduce space between gallery and content on mobile */
-    .page-type-product .productView-images {
-        margin-bottom: 0.75rem;
-    }
-}
-
-/* 3) Add-to-cart button: Amazon-style yellow, more premium */
-.page-type-product .productView-options .button--primary {
-    background-color: #ffb93a;    /* amazon-ish yellow */
-    border-color: #e0a52f;
-    color: #111 !important;
-    font-weight: 600;
-    border-radius: 999px;
-    padding: 0.85rem 2.5rem;
-}
-
-.page-type-product .productView-options .button--primary:hover,
-.page-type-product .productView-options .button--primary:focus {
-    background-color: #f0a723;
-    border-color: #c28a1c;
-    color: #111;
-}
-
-/* 4) Availability + custom fields block under Add to Cart */
-.page-type-product .jj-post-cart-meta {
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.4;
-    color: #555;
-}
-
-.page-type-product .jj-meta-row {
-    display: flex;
-    gap: 0.25rem;
-}
-
-.page-type-product .jj-meta-label {
-    font-weight: 600;
-}
 
 /* =========================================================
    JJ PRODUCT PAGE REFINEMENTS (ROOTS)
@@ -2847,7 +2758,7 @@ li.pagination-item--previous a{
 
 /* 3) Add-to-cart button: Amazon-style yellow, more premium */
 .page-type-product .productView-options .button--primary {
-    background-color: #ffb93a;    /* amazon-ish yellow */
+    background-color: #ffb93a;
     border-color: #e0a52f;
     color: #111 !important;
     font-weight: 600;
@@ -2879,78 +2790,102 @@ li.pagination-item--previous a{
     font-weight: 600;
 }
 
-/* 5) JJ — COLOR / SCENT swatch strip: label fixed, buttons scroll, icons fully visible */
+/* 5) JJ — COLOR / SCENT swatch strip: label fixed, buttons scroll, icons 64px */
 
-/* Outer field: horizontal flex row that scrolls */
+/* Lay out label + swatch row horizontally */
 .page-type-product .productView-options
   .form-field[data-product-attribute="swatch"] {
     display: flex;
-    flex-wrap: nowrap;
     align-items: flex-start;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding: 0.25rem 0 0.5rem;
     column-gap: 0.5rem;
+    padding: 0.25rem 0 0.5rem;
 }
 
-/* Label stays “pinned” at the left edge while the rest of the row scrolls */
+/* Label stays fixed on the left */
 .page-type-product .productView-options
   .form-field[data-product-attribute="swatch"] .form-label {
-    position: sticky;
-    left: 0;
     flex: 0 0 auto;
     margin: 0;
-    margin-right: 0.5rem;
     white-space: nowrap;
-    background: #ffffff;
-    z-index: 2;
+}
+
+/* Swatch container (form-field-control or form-options) scrolls horizontally */
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"] .form-field-control,
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"] .form-options {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    column-gap: 0.25rem;
 }
 
 /* Each swatch wrapper is a fixed chip in the row */
 .page-type-product .productView-options
   .form-field[data-product-attribute="swatch"] .form-option-wrapper {
     flex: 0 0 auto;
-    margin-right: 0.25rem;
 }
 
-/* Swatch/Scent buttons: consistent size, full icon visibility */
+/* Swatch / scent buttons: hard clamp to 64×64 */
 .page-type-product [data-product-attribute="swatch"] .form-option {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
+
     width: 64px !important;
     height: 64px !important;
-    min-width: 0 !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    max-height: 64px !important;
+
     padding: 0 !important;
+    box-sizing: border-box;
+}
+
+/* Kill any theme transforms that blow them up */
+.page-type-product [data-product-attribute="swatch"] .form-option,
+.page-type-product [data-product-attribute="swatch"] .form-option-variant {
+    transform: none !important;
 }
 
 /* If the icon is an <img>, keep it fully visible */
 .page-type-product [data-product-attribute="swatch"] .form-option-variant img {
     max-width: 100%;
     max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-/* If the icon is a background-image on the variant, don't crop it */
+/* If the icon is using background-image, don’t crop it */
 .page-type-product [data-product-attribute="swatch"] .form-option-variant {
     background-size: contain !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
 
-/* Optional: slightly nicer horizontal scrollbar for the whole strip */
+/* Optional: slightly nicer horizontal scrollbar for the swatch row */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
+  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar,
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar {
     height: 10px;
 }
 
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track,
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar-track {
     background: #f3f3f3;
     border-radius: 999px;
 }
 
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb,
+.page-type-product .productView-options
+  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar-thumb {
     background: #c7c7c7;
     border-radius: 999px;
 }
