@@ -2790,56 +2790,56 @@ li.pagination-item--previous a{
     font-weight: 600;
 }
 
-/* 5) JJ — COLOR / SCENT swatch strip: label fixed, buttons scroll, icons 64px */
+/* 5) JJ — COLOR / SCENT swatch strip
+      - Label above
+      - Swatch buttons 64×64
+      - Horizontal strip with scroll when needed
+*/
 
-/* Lay out label + swatch row horizontally */
+/* Keep the swatch field in normal block flow */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] {
-    display: flex;
-    align-items: flex-start;
-    column-gap: 0.5rem;
-    padding: 0.25rem 0 0.5rem;
+  [data-product-attribute="swatch"] {
+    display: block;
+    padding-bottom: 0.5rem;
 }
 
-/* Label stays fixed on the left */
+/* Label styling (let Roots handle most of it, but tighten spacing) */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-label {
-    flex: 0 0 auto;
-    margin: 0;
-    white-space: nowrap;
+  [data-product-attribute="swatch"] .form-label {
+    margin-bottom: 0.25rem;
 }
 
-/* Swatch container (form-field-control or form-options) scrolls horizontally */
+/* Make ONLY the control row scroll horizontally */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-options {
-    flex: 1 1 auto;
+  [data-product-attribute="swatch"] .form-field-control {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
     overflow-x: auto;
     overflow-y: hidden;
-    column-gap: 0.25rem;
+    column-gap: 0.5rem;
+    padding: 0.25rem 0 0.25rem;
 }
 
 /* Each swatch wrapper is a fixed chip in the row */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-option-wrapper {
+  [data-product-attribute="swatch"] .form-option-wrapper {
     flex: 0 0 auto;
+    margin-right: 0.25rem;
 }
 
-/* Swatch / scent buttons: hard clamp to 64×64 */
-.page-type-product [data-product-attribute="swatch"] .form-option {
+/* Force the actual option to 64 × 64 and beat Roots defaults */
+.page-type-product .productView-options
+  [data-product-attribute="swatch"] .form-option,
+.page-type-product .productView-options
+  [data-product-attribute="swatch"] .form-option.form-option-swatch {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-
     width: 64px !important;
     height: 64px !important;
     min-width: 64px !important;
-    max-width: 64px !important;
-    max-height: 64px !important;
-
+    min-height: 64px !important;
     padding: 0 !important;
     box-sizing: border-box;
 }
@@ -2859,33 +2859,27 @@ li.pagination-item--previous a{
     object-fit: contain;
 }
 
-/* If the icon is using background-image, don’t crop it */
+/* If the icon is a background-image on the variant, don’t crop it */
 .page-type-product [data-product-attribute="swatch"] .form-option-variant {
     background-size: contain !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
 
-/* Optional: slightly nicer horizontal scrollbar for the swatch row */
+/* Optional: slightly nicer horizontal scrollbar for the swatch strip */
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar {
+  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar {
     height: 10px;
 }
 
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar-track {
+  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track {
     background: #f3f3f3;
     border-radius: 999px;
 }
 
 .page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb,
-.page-type-product .productView-options
-  .form-field[data-product-attribute="swatch"] .form-options::-webkit-scrollbar-thumb {
+  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb {
     background: #c7c7c7;
     border-radius: 999px;
 }
