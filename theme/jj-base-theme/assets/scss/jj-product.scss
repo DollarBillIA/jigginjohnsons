@@ -125,22 +125,39 @@
    Swatch rows: horizontal slider
    ------------------------------- */
 
+/* Keep the field itself static so the label doesn't scroll */
 .productView-options .form-field[data-product-attribute="swatch"] {
+    display: block;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Label stays full-width, not in the horizontal scroll area */
+.productView-options .form-field[data-product-attribute="swatch"] .form-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    white-space: normal;
+}
+
+/* The inner swatch strip is what actually scrolls horizontally */
+.productView-options .form-field[data-product-attribute="swatch"] .form-option-swatch-wrap {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
     padding-bottom: 0.45rem; /* space for thicker scrollbar */
-    margin-bottom: 0.75rem;
 }
 
 /* Each swatch wrapper becomes an inline “chip” */
-.productView-options .form-field[data-product-attribute="swatch"] .form-option-wrapper {
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch-wrap
+    .form-option-wrapper {
     display: inline-block;
     vertical-align: top;
     margin-right: 0.25rem;
 }
 
-/* Keep the internal swatch size consistent with your 65px look */
+/* Swatch tile size + non-cropping background */
 .productView-options
     .form-field[data-product-attribute="swatch"]
     .form-option-swatch
@@ -148,6 +165,11 @@
     width: 65px;
     height: 65px;
     border-radius: 0.4rem;
+
+    /* KEY: show full icon, don't crop */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 /* Selected swatch outlined a bit more boldly */
@@ -159,24 +181,26 @@
 }
 
 /* Thicker horizontal scrollbar (WebKit / Chromium only) */
-.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
-    height: 10px; /* thicker than default (~50% bump) */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch-wrap::-webkit-scrollbar {
+    height: 10px;
 }
 
-.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch-wrap::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.04);
     border-radius: 999px;
 }
 
-.productView-options .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch-wrap::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.18);
     border-radius: 999px;
 }
 
-/* Fallback for non-WebKit browsers – use a subtle bottom border as a “track” cue */
-.productView-options .form-field[data-product-attribute="swatch"] {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
 
 /* -------------------------------
    MOBILE-FIRST TIGHTENING
