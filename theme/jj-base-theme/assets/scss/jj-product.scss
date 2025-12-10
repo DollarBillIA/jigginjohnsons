@@ -125,19 +125,76 @@
    Swatch rows: horizontal slider
    ------------------------------- */
 
-/* Keep the field itself static so the label doesn't scroll */
-.productView-options .form-field[data-product-attribute="swatch"] {
-    display: block;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+/* The inner swatch strip becomes a horizontal flex scroller */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.45rem; /* space for thicker scrollbar */
 }
 
-/* Label stays full-width, not in the horizontal scroll area */
-.productView-options .form-field[data-product-attribute="swatch"] .form-label {
-    display: block;
-    margin-bottom: 0.35rem;
-    white-space: normal;
+/* Each swatch becomes a fixed-size “chip” in the row.
+   We cover both .form-option-wrapper and .form-option in case the theme uses either. */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid
+    .form-option-wrapper,
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid
+    .form-option {
+    flex: 0 0 auto;
+    width: auto !important;
+    max-width: none;
+    margin-right: 0.25rem;
 }
+
+/* Swatch tile size + non-cropping background */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-swatch
+    .form-option-variant {
+    width: 65px;
+    height: 65px;
+    border-radius: 0.4rem;
+
+    /* KEY: show full icon, don't crop */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Selected swatch outlined a bit more boldly */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    input.form-radio:checked
+    + .form-option-swatch {
+    box-shadow: 0 0 0 2px #21561f;
+}
+
+/* Thicker horizontal scrollbar (WebKit / Chromium only) */
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid::-webkit-scrollbar {
+    height: 10px;
+}
+
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 999px;
+}
+
+.productView-options
+    .form-field[data-product-attribute="swatch"]
+    .form-option-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.18);
+    border-radius: 999px;
+}
+
 
 /* The inner swatch strip is what actually scrolls horizontally */
 .productView-options .form-field[data-product-attribute="swatch"] .form-option-grid {
