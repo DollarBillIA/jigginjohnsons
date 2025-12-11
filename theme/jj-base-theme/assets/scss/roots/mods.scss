@@ -2791,67 +2791,71 @@ li.pagination-item--previous a{
 }
 
 /* 5) JJ — COLOR / SCENT swatch strip
-      - Label above
-      - Swatch buttons 64×64
-      - Horizontal strip with scroll when needed
+   - label on its own line
+   - icons forced to 64px
+   - horizontal scroll if they overflow
 */
 
-/* Keep the swatch field in normal block flow */
+/* The swatch form-field itself becomes the scroll container */
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] {
-    display: block;
-    padding-bottom: 0.5rem;
-}
-
-/* Label styling (let Roots handle most of it, but tighten spacing) */
-.page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-label {
-    margin-bottom: 0.25rem;
-}
-
-/* Make ONLY the control row scroll horizontally */
-.page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-field-control {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
+  .form-field[data-product-attribute="swatch"] {
+    padding: 0.25rem 0 0.75rem;
+    margin-bottom: 0.75rem;
     overflow-x: auto;
     overflow-y: hidden;
-    column-gap: 0.5rem;
-    padding: 0.25rem 0 0.25rem;
+    white-space: nowrap;  /* keep swatches on one line */
 }
 
-/* Each swatch wrapper is a fixed chip in the row */
+/* Label line sits above the row */
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-option-wrapper {
-    flex: 0 0 auto;
-    margin-right: 0.25rem;
+  .form-field[data-product-attribute="swatch"] .form-label {
+    display: block;
+    margin: 0 0 0.35rem;
+    white-space: normal;  /* allow the label itself to wrap */
 }
 
-/* Force the actual option to 64 × 64 and beat Roots defaults */
+/* Any optional helper text under the label */
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-option,
+  .form-field[data-product-attribute="swatch"] .swatch-option-message {
+    display: block;
+    margin: 0 0 0.35rem;
+    font-size: 0.75rem;
+    color: #777;
+    white-space: normal;
+}
+
+/* Each swatch wrapper is a fixed 64×64 chip */
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-option.form-option-swatch {
-    display: inline-flex !important;
+  .form-field[data-product-attribute="swatch"] .form-option-wrapper {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+
     width: 64px !important;
     height: 64px !important;
     min-width: 64px !important;
-    min-height: 64px !important;
-    padding: 0 !important;
+    max-width: 64px !important;
+    max-height: 64px !important;
+
+    margin-right: 0.25rem;
     box-sizing: border-box;
 }
 
-/* Kill any theme transforms that blow them up */
-.page-type-product [data-product-attribute="swatch"] .form-option,
-.page-type-product [data-product-attribute="swatch"] .form-option-variant {
-    transform: none !important;
+/* The clickable swatch label fills the wrapper */
+.page-type-product [data-product-attribute="swatch"] .form-option {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    transform: none !important; /* kill theme scale-ups */
 }
 
 /* If the icon is an <img>, keep it fully visible */
-.page-type-product [data-product-attribute="swatch"] .form-option-variant img {
+.page-type-product [data-product-attribute="swatch"]
+  .form-option-variant img {
     max-width: 100%;
     max-height: 100%;
     width: 100%;
@@ -2859,27 +2863,28 @@ li.pagination-item--previous a{
     object-fit: contain;
 }
 
-/* If the icon is a background-image on the variant, don’t crop it */
-.page-type-product [data-product-attribute="swatch"] .form-option-variant {
+/* If the icon is using background-image, don’t crop it */
+.page-type-product [data-product-attribute="swatch"]
+  .form-option-variant {
     background-size: contain !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
 }
 
-/* Optional: slightly nicer horizontal scrollbar for the swatch strip */
+/* Optional: slightly nicer horizontal scrollbar for the swatch row */
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar {
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar {
     height: 10px;
 }
 
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-track {
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-track {
     background: #f3f3f3;
     border-radius: 999px;
 }
 
 .page-type-product .productView-options
-  [data-product-attribute="swatch"] .form-field-control::-webkit-scrollbar-thumb {
+  .form-field[data-product-attribute="swatch"]::-webkit-scrollbar-thumb {
     background: #c7c7c7;
     border-radius: 999px;
 }
