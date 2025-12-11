@@ -1,0 +1,139 @@
+---
+product:
+    videos:
+        limit: {{theme_settings.productpage_videos_count}}
+    reviews:
+        limit: {{theme_settings.productpage_reviews_count}}
+    related_products:
+        limit: {{theme_settings.productpage_related_products_count}}
+    similar_by_views:
+        limit: {{theme_settings.productpage_similar_by_views_count}}
+---
+{{inject 'productId' product.id}}
+
+{{#partial "page"}}
+    <div class="container">
+        {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+        {{#each product.shipping_messages}}
+            {{> components/common/alert/alert-info message}}
+        {{/each}}
+    </div>
+
+    <div>
+        <div class="container jj-product-page">
+            {{!-- Standard Roots product view: images, options, price, add-to-cart --}}
+            {{> components/products/product-view}}
+
+            {{{region name="product_below_content"}}}
+
+            {{!-- =========================
+                 JJ DETAILS / ACCORDIONS
+            ========================== --}}
+            <section class="jj-details-shell" aria-label="Details and specs">
+                <div class="jj-tabs">
+
+                    <details class="jj-tab" open>
+                        <summary class="jj-tab-title">On-the-water overview (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            This is placeholder text for Jiggin’ Johnson’s new template shell.
+                            Once we’re happy with the layout and behavior, we’ll plug in real product
+                            descriptions, rigging tips, and JJ-specific language.
+                        </div>
+                    </details>
+
+                    <details class="jj-tab">
+                        <summary class="jj-tab-title">Specs &amp; build (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            Specs &amp; build (demo copy)
+                        </div>
+                    </details>
+
+                    <details class="jj-tab">
+                        <summary class="jj-tab-title">Care &amp; storage (demo copy)</summary>
+                        <div class="jj-tab-body">
+                            Care &amp; storage (demo copy)
+                        </div>
+                    </details>
+
+                </div>
+
+                {{!-- =========================
+                     BEST WAYS TO FISH IT (DEMO)
+                ========================== --}}
+                <section class="jj-fish-ways">
+                    <h3>Best ways to fish it (demo)</h3>
+
+                    <div class="jj-ways-grid">
+
+                        <div class="jj-way">
+                            <strong>Swim Jig Trailer</strong>
+                            <span>Shallow grass, slow roll</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Texas Rig</strong>
+                            <span>Pitching to cover</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Ball Jig Head</strong>
+                            <span>Dragging sand or rock</span>
+                        </div>
+
+                        <div class="jj-way">
+                            <strong>Split Shot</strong>
+                            <span>Natural subtle glides</span>
+                        </div>
+
+                    </div>
+                </section>
+            </section>
+        </div>
+
+        {{!-- Keep normal tabs / related / similar / reviews from Roots --}}
+        {{> components/products/tabs schema=true }}
+
+        {{#if product.related_products}}
+            {{#unless theme_settings.related_products_tab}}
+                <div id="tab-related">
+                    <div class="grid-bg">
+                        <div class="container">
+                            <h3 class="main-heading uppercase center"><strong>{{lang 'products.related_products'}}</strong></h3>
+                            {{#if settings.data_tag_enabled}}
+                                {{> components/products/related products=product.related_products columns=6 list="Related Products"}}
+                            {{else}}
+                                {{> components/products/related products=product.related_products columns=6}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            {{/unless}}
+        {{/if}}
+        
+        {{#if product.similar_by_views}}
+            {{#unless theme_settings.customer_viewed_products_tab}}
+                <div id="tab-related">
+                    <div class="grid-bg">
+                        <div class="container">
+                            <h3 class="main-heading uppercase center"><strong>{{lang 'products.similar_by_views'}}</strong></h3>
+                            {{> components/products/similar-by-views products=product.similar_by_views columns=6}}
+                        </div>
+                    </div>
+                </div>
+            {{/unless}}
+        {{/if}}
+        
+        {{#if settings.show_product_reviews}}
+            {{#gt product.reviews.total 0}}
+                <div class="container">
+                    <h3 class="main-heading uppercase" id="reviews-accordion">Reviews</h3>
+                    {{> components/products/reviews reviews=product.reviews product=product urls=urls}}
+                </div>
+            {{/gt}}
+        {{/if}}
+    </div>
+
+    {{> components/products/schema}}
+{{/partial}}
+{{> layout/base}}

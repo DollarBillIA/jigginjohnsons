@@ -1,0 +1,3 @@
+{
+  "components/common/wallet-buttons": "{{#if wallet_buttons}}\n    <div class=\"add-to-cart-wallet-buttons\" data-add-to-cart-wallet-buttons>\n        {{{wallet_buttons}}}\n    </div>\n{{/if}}\n"
+}

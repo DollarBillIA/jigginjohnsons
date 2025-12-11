@@ -1,0 +1,131 @@
+// JJ PRODUCT OVERRIDES
+// ====================
+
+// ------------------------------------------------------------
+// HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
+// ------------------------------------------------------------
+
+.productView-options .form-field[data-product-attribute='swatch'] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  > .form-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  white-space: normal;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-wrapper {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 0.25rem 0 0;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-variant {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  .form-option-image {
+  width: 64px;
+  height: 64px;
+  background-size: cover;
+  background-position: center;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
+  height: 7px;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.productView-options
+  .form-field[data-product-attribute='swatch']::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 600px) {
+  .productView-options .form-field[data-product-attribute='swatch'] {
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+}
+
+// ------------------------------------------------------------
+// CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
+// ------------------------------------------------------------
+
+.productView-images {
+  position: relative;
+}
+
+.jj-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  padding: 0;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.jj-gallery-arrow--prev {
+  left: 0.75rem;
+}
+
+.jj-gallery-arrow--next {
+  right: 0.75rem;
+}
+
+.jj-gallery-arrow:hover {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.jj-gallery-arrow:focus {
+  outline: 2px solid #000;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .jj-gallery-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+}
