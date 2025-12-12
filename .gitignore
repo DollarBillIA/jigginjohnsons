@@ -1,17 +1,20 @@
-# Ignore compiled Stencil assets (theme build output) for any theme
+# Ignore compiled Stencil assets (theme build output) for ANY theme
 theme/*/assets/dist/
 theme/*/parsed/
 
-# Ignore generated bundles + maps for any theme
+# Ignore generated bundles + maps for ANY theme
 theme/**/*.map
 theme/**/*.bundle.js
 theme/**/*.bundle.css
-theme/*.zip
 
-# Ignore node modules inside any theme
+# Ignore all Stencil build ZIPs
+theme/*.zip
+theme/*/*.zip
+
+# Ignore node modules inside ANY theme
 theme/*/node_modules/
 
-# Ignore macOS + npm noise
+# Ignore OS + npm noise
 .DS_Store
 npm-debug.log*
 
