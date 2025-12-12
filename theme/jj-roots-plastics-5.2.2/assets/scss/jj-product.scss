@@ -90,6 +90,15 @@
   }
 }
 
+/* JJ — Move price above title + right-align + enlarge */
+.jj-product-page .productView-price {
+  order: -1;                /* Move ABOVE the title */
+  align-self: flex-end;     /* Right-align within the column */
+  font-size: 1.85rem;       /* Your updated size */
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
 // ------------------------------------------------------------
 // CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
 // ------------------------------------------------------------
