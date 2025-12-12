@@ -39,8 +39,8 @@
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-variant {
-  width: 64px;
-  height: 64px;
+  // width: 64px;
+  // height: 64px;
   background-size: cover;
   background-position: center;
 }
@@ -48,11 +48,12 @@
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-image {
-  width: 64px;
-  height: 64px;
+  // width: 64px;
+  // height: 64px;
   background-size: cover;
   background-position: center;
 }
+
 
 .productView-options
   .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
