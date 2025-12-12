@@ -1,15 +1,15 @@
-# Ignore compiled Stencil assets (theme build output)
-theme/jj-base-theme/assets/dist/
-theme/jj-base-theme/parsed/
+# Ignore compiled Stencil assets (theme build output) for any theme
+theme/*/assets/dist/
+theme/*/parsed/
 
-# Ignore generated bundles + maps
-theme/jj-base-theme/**/*.map
-theme/jj-base-theme/**/*.bundle.js
-theme/jj-base-theme/**/*.bundle.css
-theme/jj-base-theme/*.zip
+# Ignore generated bundles + maps for any theme
+theme/**/*.map
+theme/**/*.bundle.js
+theme/**/*.bundle.css
+theme/*.zip
 
-# Ignore node modules inside theme
-theme/jj-base-theme/node_modules/
+# Ignore node modules inside any theme
+theme/*/node_modules/
 
 # Ignore macOS + npm noise
 .DS_Store
