@@ -5,6 +5,18 @@
 // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
 // ------------------------------------------------------------
 
+
+// Label stays pinned on the left during horizontal scroll
+.productView-options
+  .form-field[data-product-attribute='swatch']
+  > .form-label {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: white;
+    padding-right: 0.75rem;
+}
+
 .productView-options .form-field[data-product-attribute='swatch'] {
   overflow-x: auto;
   overflow-y: hidden;
