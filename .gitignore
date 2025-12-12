@@ -19,3 +19,4 @@ theme/*/node_modules/
 npm-debug.log*
 
 
+/theme/jj-roots-plastics-5.2.2/assets/dist

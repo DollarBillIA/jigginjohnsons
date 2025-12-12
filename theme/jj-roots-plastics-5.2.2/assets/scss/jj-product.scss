@@ -5,16 +5,18 @@
 // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
 // ------------------------------------------------------------
 
-
 // Label stays pinned on the left during horizontal scroll
 .productView-options
   .form-field[data-product-attribute='swatch']
   > .form-label {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background: white;
-    padding-right: 0.75rem;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #ffffff;
+  padding-right: 0.75rem;
+  display: block;
+  margin-bottom: 0.25rem;
+  white-space: normal;
 }
 
 .productView-options .form-field[data-product-attribute='swatch'] {
@@ -23,14 +25,6 @@
   white-space: nowrap;
   padding-bottom: 0.5rem;
   margin-bottom: 0.75rem;
-}
-
-.productView-options
-  .form-field[data-product-attribute='swatch']
-  > .form-label {
-  display: block;
-  margin-bottom: 0.25rem;
-  white-space: normal;
 }
 
 .productView-options
@@ -48,6 +42,7 @@
   overflow: hidden;
 }
 
+// Let theme settings control swatch size; just keep images covering
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-variant {
@@ -65,7 +60,6 @@
   background-size: cover;
   background-position: center;
 }
-
 
 .productView-options
   .form-field[data-product-attribute='swatch']::-webkit-scrollbar {
@@ -90,11 +84,22 @@
   }
 }
 
-/* JJ — Move price above title + right-align + enlarge */
+// ------------------------------------------------------------
+// JJ HEADER LAYOUT (PRICE + DETAILS)
+// ------------------------------------------------------------
+
+// Stack header details vertically for JJ template
+.jj-product-page .productView-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Move price above title + right-align + enlarge (JJ only) */
 .jj-product-page .productView-price {
-  order: -1;                /* Move ABOVE the title */
-  align-self: flex-end;     /* Right-align within the column */
-  font-size: 1.85rem;       /* Your updated size */
+  order: -1;            // Move ABOVE the title inside the flex column
+  align-self: flex-end; // Right-align within the details column
+  font-size: 1.85rem;   // Updated size you liked in DevTools
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
