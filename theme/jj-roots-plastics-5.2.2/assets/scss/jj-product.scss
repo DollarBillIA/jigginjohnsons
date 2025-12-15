@@ -5,7 +5,7 @@
 // HORIZONTAL SWATCH STRIPS (COLOR + SCENT)
 // ------------------------------------------------------------
 
-// Label stays pinned on the left during horizontal scroll
+// Label stays pinned on the left during horizontal scroll (JJ swatch fields)
 .productView-options
   .form-field[data-product-attribute='swatch']
   > .form-label {
@@ -14,6 +14,7 @@
   z-index: 2;
   background: #ffffff;
   padding-right: 0.75rem;
+
   display: block;
   margin-bottom: 0.25rem;
   white-space: normal;
@@ -46,8 +47,6 @@
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-variant {
-  // width: 64px;
-  // height: 64px;
   background-size: cover;
   background-position: center;
 }
@@ -55,8 +54,6 @@
 .productView-options
   .form-field[data-product-attribute='swatch']
   .form-option-image {
-  // width: 64px;
-  // height: 64px;
   background-size: cover;
   background-position: center;
 }
@@ -85,23 +82,31 @@
 }
 
 // ------------------------------------------------------------
-// JJ HEADER LAYOUT (PRICE + DETAILS)
+// JJ HEADER LAYOUT (PRICE ABOVE TITLE, JJ ONLY)
 // ------------------------------------------------------------
+//
+// IMPORTANT:
+// In Roots, the title + price live as siblings inside `.productView-product`.
+// That’s the flex parent where `order` and `align-self` actually work.
+// (Applying `order` on `.productView-details` won’t move `.productView-price`
+// if it isn’t a child of that element.)
 
-// Stack header details vertically for JJ template
-.jj-product-page .productView-details {
+.jj-product-page .productView-product {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
-/* Move price above title + right-align + enlarge (JJ only) */
 .jj-product-page .productView-price {
-  order: -1;            // Move ABOVE the title inside the flex column
-  align-self: flex-end; // Right-align within the details column
-  font-size: 1.85rem;   // Updated size you liked in DevTools
+  order: -2;              // Move ABOVE the title inside the flex column
+  align-self: flex-end;   // Right-align within the product header column
+  font-size: 1.85rem;     // Your updated size
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin: 0 0 0.25rem 0;  // Normalize spacing
+  clear: none;            // Defensive vs theme float/clear rules
+}
+
+.jj-product-page .productView-title {
+  order: -1;              // Keep title just below price
 }
 
 // ------------------------------------------------------------
