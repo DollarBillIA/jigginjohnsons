@@ -1,6 +1,15 @@
+import jjProductMoves from './jj-product-moves';
+
 ;(function () {
   var page = document.getElementById('jj-product-page');
   if (!page) return;
+
+  // Ensure JJ “moves” logic is bundled + runs (it is JJ-only by selector)
+  try {
+    jjProductMoves();
+  } catch (e) {
+    // Fail silently so JJ page never breaks if something changes upstream
+  }
 
   function forEachNode(list, cb) {
     if (!list) return;
@@ -11,7 +20,7 @@
 
   function closest(el, selector) {
     while (el && el !== document) {
-      if (el.matches && el.matches(selector)) return el;
+      if (el.matches && el.matches(selector)) return el.matches(selector) ? el : null;
       el = el.parentNode;
     }
     return null;
@@ -60,9 +69,7 @@
       var checked = group.querySelector('.jj-option-radio:checked');
       if (checked) {
         var labelNode =
-          page.querySelector(
-            'label[for="' + checked.id + '"] .pill-label'
-          ) ||
+          page.querySelector('label[for="' + checked.id + '"] .pill-label') ||
           page.querySelector('label[for="' + checked.id + '"]');
 
         if (labelNode) {
@@ -130,9 +137,7 @@
   ============================ */
   var arrows = page.querySelectorAll('.img-arrow');
   var colorGroup = optionGroups.length ? optionGroups[0] : null;
-  var colorRadios = colorGroup
-    ? colorGroup.querySelectorAll('.jj-option-radio')
-    : [];
+  var colorRadios = colorGroup ? colorGroup.querySelectorAll('.jj-option-radio') : [];
 
   function getCurrentColorIndex() {
     var idx = 0;
@@ -160,8 +165,7 @@
         if (!radio.checked) {
           radio.checked = true;
 
-          // Fire a change event so BigCommerce product.js
-          // can update price, availability, etc.
+          // Fire a change event so BigCommerce product.js updates price, availability, etc.
           var evt = document.createEvent('HTMLEvents');
           evt.initEvent('change', true, false);
           radio.dispatchEvent(evt);
@@ -178,8 +182,7 @@
       if (!colorRadios.length) return;
 
       var current = getCurrentColorIndex();
-      var next =
-        arrow.classList.contains('img-arrow--right') ? current + 1 : current - 1;
+      var next = arrow.classList.contains('img-arrow--right') ? current + 1 : current - 1;
       setColorIndex(next);
     });
   });
@@ -194,6 +197,5 @@
     });
   }
 
-  // No custom form submit handler here — we want
-  // BigCommerce's theme/product.js to own add-to-cart
+  // No custom form submit handler here — we want BigCommerce's theme/product.js to own add-to-cart
 })();
