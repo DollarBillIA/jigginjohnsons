@@ -159,9 +159,10 @@
 .jj-product-page .add-to-cart-buttons input.button--primary[type='submit'] {
   background: #ff9900;
   color: #111111;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  border-radius: 6px;
-  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 8px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
 
 .jj-product-page #form-action-addToCart:hover,
@@ -169,6 +170,14 @@
 .jj-product-page .form-action input.button--primary[type='submit']:hover,
 .jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:hover {
   filter: brightness(0.96);
+}
+
+.jj-product-page #form-action-addToCart:focus,
+.jj-product-page input#form-action-addToCart:focus,
+.jj-product-page .form-action input.button--primary[type='submit']:focus,
+.jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:focus {
+  outline: 2px solid rgba(0, 0, 0, 0.55);
+  outline-offset: 2px;
 }
 
 // ------------------------------------------------------------
@@ -209,6 +218,7 @@
 
 // ------------------------------------------------------------
 // CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
+// - bigger, higher contrast, easier to hit
 // ------------------------------------------------------------
 
 .productView-images {
@@ -219,20 +229,28 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
+
+  width: 44px;
+  height: 44px;
   border-radius: 9999px;
-  border: none;
-  background: rgba(0, 0, 0, 0.08);
-  color: #444;
+
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  background: rgba(255, 255, 255, 0.85);
+
+  color: #111;
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
-  z-index: 5;
+  z-index: 6;
   padding: 0;
-  font-size: 18px;
+
+  font-size: 22px;
   line-height: 1;
+
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .jj-gallery-arrow--prev {
@@ -244,24 +262,30 @@
 }
 
 .jj-gallery-arrow:hover {
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.jj-gallery-arrow:active {
+  transform: translateY(-50%) scale(0.98);
 }
 
 .jj-gallery-arrow:focus {
-  outline: 2px solid #000;
+  outline: 2px solid rgba(0, 0, 0, 0.6);
   outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
   .jj-gallery-arrow {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
+    width: 46px;
+    height: 46px;
+    font-size: 24px;
   }
 }
 
 // ------------------------------------------------------------
 // JJ STICKY ADD TO CART (MOBILE, JJ ONLY)
+// - cleaner "app bar" feel, safer spacing, better hierarchy
 // ------------------------------------------------------------
 
 .jj-sticky-atc {
@@ -275,11 +299,16 @@
   justify-content: space-between;
   gap: 0.75rem;
 
-  padding: 0.6rem 0.75rem;
-  background: #ffffff;
+  padding: 0.65rem 0.8rem;
+  background: rgba(255, 255, 255, 0.92);
+
   border-top: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.14);
+
   z-index: 9999;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .jj-sticky-atc.is-visible {
@@ -292,9 +321,11 @@
 }
 
 .jj-sticky-atc__summary {
-  font-size: 0.9rem;
-  line-height: 1.1;
-  color: #333;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  color: #222;
+  font-weight: 600;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -303,21 +334,49 @@
 .jj-sticky-atc__btn {
   background: #ff9900;
   color: #111111;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  border-radius: 6px;
-  font-weight: 700;
-  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+
+  font-weight: 900;
+  letter-spacing: 0.2px;
+
+  padding: 0.72rem 1.05rem;
   cursor: pointer;
+
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
+}
+
+.jj-sticky-atc__btn:hover {
+  filter: brightness(0.96);
+}
+
+.jj-sticky-atc__btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.14);
 }
 
 .jj-sticky-atc__btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
 /* Make room so the sticky bar doesn't cover page content */
 @media (max-width: 600px) {
   body {
-    padding-bottom: 64px;
+    padding-bottom: 76px;
+  }
+}
+
+/* Respect phones with bottom safe-area (iPhone, etc.) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .jj-sticky-atc {
+    padding-bottom: calc(0.65rem + env(safe-area-inset-bottom));
+  }
+
+  @media (max-width: 600px) {
+    body {
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    }
   }
 }
