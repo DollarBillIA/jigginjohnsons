@@ -16,7 +16,7 @@
   }
 
   /* ============================
-     QTY / OPTIONS / ARROWS (your existing JJ code)
+     YOUR EXISTING JJ CODE (qty/options/arrows)
   ============================ */
 
   var form = page.querySelector('#jj-product-form');
@@ -84,7 +84,7 @@
         });
       }
       updateStickyVariant();
-      scheduleMoves(); // <-- important: re-run moves after option changes
+      scheduleMoves(); // keep below-ATC block correct after option changes
     });
   });
 
@@ -145,7 +145,7 @@
       var current = getCurrentColorIndex();
       var next = arrow.classList.contains('img-arrow--right') ? current + 1 : current - 1;
       setColorIndex(next);
-      scheduleMoves(); // <-- keep the below-ATC block correct
+      scheduleMoves();
     });
   });
 
@@ -156,12 +156,12 @@
   }
 
   /* ============================
-     JJ MOVES (Option A, embedded)
-     Moves Availability + Custom Fields + Review link under Add to Cart
+     JJ MOVES — Availability + Custom Fields + Review
+     (under Add to Cart, JJ only)
   ============================ */
 
   function findAtcAnchor() {
-    // Try the “classic” Roots anchors first
+    // Primary Roots containers
     var el =
       page.querySelector('#add-to-cart-wrapper') ||
       page.querySelector('.add-to-cart-wrapper') ||
@@ -169,7 +169,7 @@
 
     if (el) return el;
 
-    // Fall back to where the actual submit input lives
+    // Fallback: find the actual submit button and work upward
     var btn =
       page.querySelector('#form-action-addToCart') ||
       page.querySelector('input#form-action-addToCart') ||
@@ -177,7 +177,6 @@
 
     if (!btn) return null;
 
-    // Usually: input -> .form-action -> .add-to-cart-buttons (or nearby)
     var formAction = closest(btn, '.form-action');
     if (formAction && formAction.parentElement) return formAction.parentElement;
 
@@ -191,7 +190,6 @@
       target.className = 'jj-below-atc';
     }
 
-    // Ensure it's directly after the ATC anchor
     if (afterEl && afterEl.nextElementSibling !== target) {
       afterEl.insertAdjacentElement('afterend', target);
     }
@@ -199,8 +197,27 @@
     return target;
   }
 
+  function findAvailabilityBlock() {
+    // Look specifically for the "Availability" dt you showed in DevTools
+    var dts = page.querySelectorAll('dt.productView-info-name');
+    var availabilityDt = null;
+
+    forEachNode(dts, function (dt) {
+      var t = (dt.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (t.indexOf('availability') === 0) {
+        availabilityDt = dt;
+      }
+    });
+
+    if (!availabilityDt) return null;
+
+    // In Roots this is typically inside dl.productView-info
+    var dl = closest(availabilityDt, 'dl.productView-info');
+    return dl || null;
+  }
+
   function moveBlocksNow() {
-    // Marker to prove live execution (and for you to sanity check)
+    // Marker so you can confirm execution in Elements (<html data-jj-moves="true">)
     document.documentElement.setAttribute('data-jj-moves', 'true');
 
     var atc = findAtcAnchor();
@@ -208,26 +225,23 @@
 
     var target = getOrCreateTarget(atc);
 
-    // These selectors match what you showed in DevTools:
-    // Availability lives inside .productView-info (dl)
-    // Custom Fields live inside .productView-customFields
-    var infoDl =
-      page.querySelector('.productView-info') ||
-      page.querySelector('.productView-details .productView-info') ||
-      page.querySelector('.productView-product .productView-info');
+    // 1) Availability (dl.productView-info)
+    var availabilityDl = findAvailabilityBlock();
 
+    // 2) Custom Fields container (can be any number of fields, we move the whole block)
     var customFields =
       page.querySelector('.productView-customFields') ||
       page.querySelector('.productView-details .productView-customFields') ||
       page.querySelector('.productView-product .productView-customFields');
 
+    // 3) Write a Review link
     var reviewLink =
       page.querySelector('.productView-reviewLink') ||
       page.querySelector('a[href*="#write_review"]') ||
       page.querySelector('a[href*="write_review"]');
 
-    // Order under Add to Cart:
-    if (infoDl) target.appendChild(infoDl);
+    // Move in the exact order you want under ATC:
+    if (availabilityDl) target.appendChild(availabilityDl);
     if (customFields) target.appendChild(customFields);
     if (reviewLink) target.appendChild(reviewLink);
   }
@@ -242,10 +256,9 @@
     }, 120);
   }
 
-  // Run once when ready, then keep stable if BC re-renders parts of the header
   scheduleMoves();
 
-  // Also re-run after any changes within the product area (covers BC redraws)
+  // Keep it stable if BC re-renders pieces of the header/details area
   var obsTarget =
     page.querySelector('.productView-details') ||
     page.querySelector('.productView') ||
