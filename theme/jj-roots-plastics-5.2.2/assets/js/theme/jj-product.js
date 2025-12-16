@@ -1,30 +1,23 @@
-import jjProductMoves from './jj-product-moves';
-
 ;(function () {
-  var page = document.getElementById('jj-product-page');
+  var page = document.getElementById('jj-product-page') || document.querySelector('.jj-product-page');
   if (!page) return;
-
-  // Ensure JJ “moves” logic is bundled + runs (it is JJ-only by selector)
-  try {
-    jjProductMoves();
-  } catch (e) {
-    // Fail silently so JJ page never breaks if something changes upstream
-  }
 
   function forEachNode(list, cb) {
     if (!list) return;
-    for (var i = 0; i < list.length; i++) {
-      cb(list[i], i);
-    }
+    for (var i = 0; i < list.length; i++) cb(list[i], i);
   }
 
   function closest(el, selector) {
     while (el && el !== document) {
-      if (el.matches && el.matches(selector)) return el.matches(selector) ? el : null;
+      if (el.matches && el.matches(selector)) return el;
       el = el.parentNode;
     }
     return null;
   }
+
+  /* ============================
+     QTY / OPTIONS / ARROWS (your existing JJ code)
+  ============================ */
 
   var form = page.querySelector('#jj-product-form');
   var qtyDisplay = page.querySelector('#jj-qty-display');
@@ -36,9 +29,6 @@ import jjProductMoves from './jj-product-moves';
   var optionGroups = page.querySelectorAll('.config-group');
   var optionRadios = page.querySelectorAll('.jj-option-radio');
 
-  /* ============================
-     QTY CONTROLS
-  ============================ */
   var qtyButtons = page.querySelectorAll('.qty-btn[data-qty-change]');
 
   function setQty(newQty) {
@@ -57,9 +47,6 @@ import jjProductMoves from './jj-product-moves';
     });
   });
 
-  /* ============================
-     STICKY VARIANT TEXT
-  ============================ */
   function updateStickyVariant() {
     if (!stickyVariantEl) return;
 
@@ -74,23 +61,16 @@ import jjProductMoves from './jj-product-moves';
 
         if (labelNode) {
           var text = labelNode.textContent || labelNode.innerText;
-          if (text) {
-            selectedLabels.push(text.replace(/\s+/g, ' ').trim());
-          }
+          if (text) selectedLabels.push(text.replace(/\s+/g, ' ').trim());
         }
       }
     });
 
-    if (selectedLabels.length) {
-      stickyVariantEl.textContent = selectedLabels.join(' • ');
-    } else {
-      stickyVariantEl.textContent = 'Select options';
-    }
+    stickyVariantEl.textContent = selectedLabels.length
+      ? selectedLabels.join(' • ')
+      : 'Select options';
   }
 
-  /* ============================
-     PILL ↔ RADIO SYNC
-  ============================ */
   forEachNode(optionRadios, function (radio) {
     radio.addEventListener('change', function () {
       var group = closest(radio, '.config-group');
@@ -98,43 +78,29 @@ import jjProductMoves from './jj-product-moves';
         var radiosInGroup = group.querySelectorAll('.jj-option-radio');
         forEachNode(radiosInGroup, function (r) {
           var label = page.querySelector('label[for="' + r.id + '"]');
-          if (label) {
-            if (r.checked) {
-              label.classList.add('is-active');
-            } else {
-              label.classList.remove('is-active');
-            }
-          }
+          if (!label) return;
+          if (r.checked) label.classList.add('is-active');
+          else label.classList.remove('is-active');
         });
       }
-
       updateStickyVariant();
+      scheduleMoves(); // <-- important: re-run moves after option changes
     });
   });
 
-  // Initial pill states and sticky summary
   (function initOptions() {
     forEachNode(optionGroups, function (group) {
       var radiosInGroup = group.querySelectorAll('.jj-option-radio');
       forEachNode(radiosInGroup, function (r) {
         var label = page.querySelector('label[for="' + r.id + '"]');
-        if (label) {
-          if (r.checked) {
-            label.classList.add('is-active');
-          } else {
-            label.classList.remove('is-active');
-          }
-        }
+        if (!label) return;
+        if (r.checked) label.classList.add('is-active');
+        else label.classList.remove('is-active');
       });
     });
-
     updateStickyVariant();
   })();
 
-  /* ============================
-     GALLERY ARROWS → COLOR OPTION
-     (assumes first option group is color)
-  ============================ */
   var arrows = page.querySelectorAll('.img-arrow');
   var colorGroup = optionGroups.length ? optionGroups[0] : null;
   var colorRadios = colorGroup ? colorGroup.querySelectorAll('.jj-option-radio') : [];
@@ -142,9 +108,7 @@ import jjProductMoves from './jj-product-moves';
   function getCurrentColorIndex() {
     var idx = 0;
     forEachNode(colorRadios, function (radio, i) {
-      if (radio.checked) {
-        idx = i;
-      }
+      if (radio.checked) idx = i;
     });
     return idx;
   }
@@ -164,8 +128,6 @@ import jjProductMoves from './jj-product-moves';
       if (i === idx) {
         if (!radio.checked) {
           radio.checked = true;
-
-          // Fire a change event so BigCommerce product.js updates price, availability, etc.
           var evt = document.createEvent('HTMLEvents');
           evt.initEvent('change', true, false);
           radio.dispatchEvent(evt);
@@ -180,22 +142,119 @@ import jjProductMoves from './jj-product-moves';
   forEachNode(arrows, function (arrow) {
     arrow.addEventListener('click', function () {
       if (!colorRadios.length) return;
-
       var current = getCurrentColorIndex();
       var next = arrow.classList.contains('img-arrow--right') ? current + 1 : current - 1;
       setColorIndex(next);
+      scheduleMoves(); // <-- keep the below-ATC block correct
     });
   });
 
-  /* ============================
-     STICKY ADD-TO-CART
-     (delegate to main button so BC JS handles form)
-  ============================ */
   if (stickyAddBtn && mainAddBtn) {
     stickyAddBtn.addEventListener('click', function () {
       mainAddBtn.click();
     });
   }
 
-  // No custom form submit handler here — we want BigCommerce's theme/product.js to own add-to-cart
+  /* ============================
+     JJ MOVES (Option A, embedded)
+     Moves Availability + Custom Fields + Review link under Add to Cart
+  ============================ */
+
+  function findAtcAnchor() {
+    // Try the “classic” Roots anchors first
+    var el =
+      page.querySelector('#add-to-cart-wrapper') ||
+      page.querySelector('.add-to-cart-wrapper') ||
+      page.querySelector('.add-to-cart-buttons');
+
+    if (el) return el;
+
+    // Fall back to where the actual submit input lives
+    var btn =
+      page.querySelector('#form-action-addToCart') ||
+      page.querySelector('input#form-action-addToCart') ||
+      page.querySelector('input.button--primary[type="submit"]');
+
+    if (!btn) return null;
+
+    // Usually: input -> .form-action -> .add-to-cart-buttons (or nearby)
+    var formAction = closest(btn, '.form-action');
+    if (formAction && formAction.parentElement) return formAction.parentElement;
+
+    return formAction || null;
+  }
+
+  function getOrCreateTarget(afterEl) {
+    var target = page.querySelector('.jj-below-atc');
+    if (!target) {
+      target = document.createElement('div');
+      target.className = 'jj-below-atc';
+    }
+
+    // Ensure it's directly after the ATC anchor
+    if (afterEl && afterEl.nextElementSibling !== target) {
+      afterEl.insertAdjacentElement('afterend', target);
+    }
+
+    return target;
+  }
+
+  function moveBlocksNow() {
+    // Marker to prove live execution (and for you to sanity check)
+    document.documentElement.setAttribute('data-jj-moves', 'true');
+
+    var atc = findAtcAnchor();
+    if (!atc) return;
+
+    var target = getOrCreateTarget(atc);
+
+    // These selectors match what you showed in DevTools:
+    // Availability lives inside .productView-info (dl)
+    // Custom Fields live inside .productView-customFields
+    var infoDl =
+      page.querySelector('.productView-info') ||
+      page.querySelector('.productView-details .productView-info') ||
+      page.querySelector('.productView-product .productView-info');
+
+    var customFields =
+      page.querySelector('.productView-customFields') ||
+      page.querySelector('.productView-details .productView-customFields') ||
+      page.querySelector('.productView-product .productView-customFields');
+
+    var reviewLink =
+      page.querySelector('.productView-reviewLink') ||
+      page.querySelector('a[href*="#write_review"]') ||
+      page.querySelector('a[href*="write_review"]');
+
+    // Order under Add to Cart:
+    if (infoDl) target.appendChild(infoDl);
+    if (customFields) target.appendChild(customFields);
+    if (reviewLink) target.appendChild(reviewLink);
+  }
+
+  var _movesTimer = null;
+  function scheduleMoves() {
+    if (_movesTimer) window.clearTimeout(_movesTimer);
+    _movesTimer = window.setTimeout(function () {
+      window.requestAnimationFrame(function () {
+        moveBlocksNow();
+      });
+    }, 120);
+  }
+
+  // Run once when ready, then keep stable if BC re-renders parts of the header
+  scheduleMoves();
+
+  // Also re-run after any changes within the product area (covers BC redraws)
+  var obsTarget =
+    page.querySelector('.productView-details') ||
+    page.querySelector('.productView') ||
+    page;
+
+  if (window.MutationObserver && obsTarget) {
+    var mo = new MutationObserver(function () {
+      scheduleMoves();
+    });
+    mo.observe(obsTarget, { childList: true, subtree: true });
+  }
 })();
