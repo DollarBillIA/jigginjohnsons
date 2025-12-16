@@ -76,8 +76,15 @@
 
 @media screen and (max-width: 600px) {
   .productView-options .form-field[data-product-attribute='swatch'] {
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  // Tighten the label block so the swatches tuck up
+  .productView-options
+    .form-field[data-product-attribute='swatch']
+    > .form-label {
+    margin-bottom: 0.15rem;
   }
 }
 
@@ -105,19 +112,15 @@
 
 .jj-product-page .productView-title {
   order: -1;
-}
-
-// Make title smaller + reduce space under it so swatches tuck up (esp mobile)
-.jj-product-page .productView-title {
-  margin: 0 0 0.5rem 0; // tighter than theme default
+  margin: 0 0 0.5rem 0;
   line-height: 1.15;
-  font-size: 1.75rem;  // desktop/tablet starting point (Roots varies)
+  font-size: 1.75rem;
 }
 
 @media (max-width: 600px) {
   .jj-product-page .productView-title {
-    font-size: 1.45rem;  // smaller so it stays ~2 lines
-    margin-bottom: 0.35rem;
+    font-size: 1.45rem;
+    margin-bottom: 0.35rem; // reduces the “yellow bar” between title and swatches
   }
 }
 
@@ -125,33 +128,28 @@
 // JJ BELOW-ATC BLOCK (Availability / Custom Fields / Review)
 // ------------------------------------------------------------
 
-// The wrapper we insert after the Add to Cart area
 .jj-product-page .jj-below-atc {
-  margin-top: 0.75rem; // overall separation from the button
+  margin-top: 0.75rem;
 }
 
-// Availability sometimes ends up in its own dl wrapper we create
 .jj-product-page .jj-below-atc .jj-availability {
-  margin: 0 0 0.35rem 0; // reduce the "too big" space before/after availability
+  margin: 0 0 0.35rem 0;
 }
 
-// If Availability is still a dt/dd pair, normalize spacing and keep it tight
 .jj-product-page .jj-below-atc dt.productView-info-name,
 .jj-product-page .jj-below-atc dd.productView-info-value {
   margin: 0;
   padding: 0;
 }
 
-// Custom fields container spacing (Pack Quantity lives here)
 .jj-product-page .jj-below-atc .productView-customFields {
-  margin: 0.35rem 0 0.65rem 0; // add a bit more space after Pack Quantity
+  margin: 0.35rem 0 0.65rem 0;
 }
 
 .jj-product-page .jj-below-atc .productView-customField {
   margin: 0.25rem 0;
 }
 
-// Review link tight to icons row, but not glued
 .jj-product-page .jj-below-atc .productView-reviewLink {
   margin: 0;
 }
@@ -164,7 +162,7 @@
 .jj-product-page input#form-action-addToCart,
 .jj-product-page .form-action input.button--primary[type='submit'],
 .jj-product-page .add-to-cart-buttons input.button--primary[type='submit'] {
-  background: #ff9900;   // amazon-ish yellow
+  background: #ff9900;
   color: #111111;
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 6px;
@@ -176,6 +174,47 @@
 .jj-product-page .form-action input.button--primary[type='submit']:hover,
 .jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:hover {
   filter: brightness(0.96);
+}
+
+// ------------------------------------------------------------
+// MOBILE: REMOVE EXTRA “YELLOW BAR” SPACING AROUND IMAGE + DETAILS
+// ------------------------------------------------------------
+
+@media (max-width: 600px) {
+  // 1) The padding inside the details section often adds a band above/below
+  .jj-product-page section.productView-details.product-data,
+  .jj-product-page .productView-details.product-data {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  // 2) The overall product view wrapper sometimes has extra padding
+  .jj-product-page .productView {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  // 3) Tighten the gallery block (common source of “yellow bars” above/below)
+  .jj-product-page .productView-images {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  // If your theme uses a figure/viewport wrapper, this helps too (safe if absent)
+  .jj-product-page .productView-image,
+  .jj-product-page .productView-imageCarousel,
+  .jj-product-page .productView-imageCarousel-main,
+  .jj-product-page .productView-imageCarousel-slide {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  // 4) Pull the options area up a touch (reduces the band right before COLOR:)
+  .jj-product-page .productView-options {
+    margin-top: 0.25rem !important;
+  }
 }
 
 // ------------------------------------------------------------
