@@ -88,8 +88,6 @@
 // IMPORTANT:
 // In Roots, the title + price live as siblings inside `.productView-product`.
 // That’s the flex parent where `order` and `align-self` actually work.
-// (Applying `order` on `.productView-details` won’t move `.productView-price`
-// if it isn’t a child of that element.)
 
 .jj-product-page .productView-product {
   display: flex;
@@ -97,16 +95,87 @@
 }
 
 .jj-product-page .productView-price {
-  order: -2;              // Move ABOVE the title inside the flex column
-  align-self: flex-end;   // Right-align within the product header column
-  font-size: 1.85rem;     // Your updated size
+  order: -2;
+  align-self: flex-end;
+  font-size: 1.85rem;
   font-weight: 700;
-  margin: 0 0 0.25rem 0;  // Normalize spacing
-  clear: none;            // Defensive vs theme float/clear rules
+  margin: 0 0 0.25rem 0;
+  clear: none;
 }
 
 .jj-product-page .productView-title {
-  order: -1;              // Keep title just below price
+  order: -1;
+}
+
+// Make title smaller + reduce space under it so swatches tuck up (esp mobile)
+.jj-product-page .productView-title {
+  margin: 0 0 0.5rem 0; // tighter than theme default
+  line-height: 1.15;
+  font-size: 1.75rem;  // desktop/tablet starting point (Roots varies)
+}
+
+@media (max-width: 600px) {
+  .jj-product-page .productView-title {
+    font-size: 1.45rem;  // smaller so it stays ~2 lines
+    margin-bottom: 0.35rem;
+  }
+}
+
+// ------------------------------------------------------------
+// JJ BELOW-ATC BLOCK (Availability / Custom Fields / Review)
+// ------------------------------------------------------------
+
+// The wrapper we insert after the Add to Cart area
+.jj-product-page .jj-below-atc {
+  margin-top: 0.75rem; // overall separation from the button
+}
+
+// Availability sometimes ends up in its own dl wrapper we create
+.jj-product-page .jj-below-atc .jj-availability {
+  margin: 0 0 0.35rem 0; // reduce the "too big" space before/after availability
+}
+
+// If Availability is still a dt/dd pair, normalize spacing and keep it tight
+.jj-product-page .jj-below-atc dt.productView-info-name,
+.jj-product-page .jj-below-atc dd.productView-info-value {
+  margin: 0;
+  padding: 0;
+}
+
+// Custom fields container spacing (Pack Quantity lives here)
+.jj-product-page .jj-below-atc .productView-customFields {
+  margin: 0.35rem 0 0.65rem 0; // add a bit more space after Pack Quantity
+}
+
+.jj-product-page .jj-below-atc .productView-customField {
+  margin: 0.25rem 0;
+}
+
+// Review link tight to icons row, but not glued
+.jj-product-page .jj-below-atc .productView-reviewLink {
+  margin: 0;
+}
+
+// ------------------------------------------------------------
+// JJ ADD TO CART BUTTON (Amazon yellow)
+// ------------------------------------------------------------
+
+.jj-product-page #form-action-addToCart,
+.jj-product-page input#form-action-addToCart,
+.jj-product-page .form-action input.button--primary[type='submit'],
+.jj-product-page .add-to-cart-buttons input.button--primary[type='submit'] {
+  background: #ff9900;   // amazon-ish yellow
+  color: #111111;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.jj-product-page #form-action-addToCart:hover,
+.jj-product-page input#form-action-addToCart:hover,
+.jj-product-page .form-action input.button--primary[type='submit']:hover,
+.jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:hover {
+  filter: brightness(0.96);
 }
 
 // ------------------------------------------------------------
