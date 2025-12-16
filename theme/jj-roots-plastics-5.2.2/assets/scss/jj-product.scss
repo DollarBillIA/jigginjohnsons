@@ -80,7 +80,6 @@
     margin-bottom: 0.6rem;
   }
 
-  // Tighten the label block so the swatches tuck up
   .productView-options
     .form-field[data-product-attribute='swatch']
     > .form-label {
@@ -91,10 +90,6 @@
 // ------------------------------------------------------------
 // JJ HEADER LAYOUT (PRICE ABOVE TITLE, JJ ONLY)
 // ------------------------------------------------------------
-//
-// IMPORTANT:
-// In Roots, the title + price live as siblings inside `.productView-product`.
-// That’s the flex parent where `order` and `align-self` actually work.
 
 .jj-product-page .productView-product {
   display: flex;
@@ -120,7 +115,7 @@
 @media (max-width: 600px) {
   .jj-product-page .productView-title {
     font-size: 1.45rem;
-    margin-bottom: 0.35rem; // reduces the “yellow bar” between title and swatches
+    margin-bottom: 0.35rem;
   }
 }
 
@@ -177,11 +172,10 @@
 }
 
 // ------------------------------------------------------------
-// MOBILE: REMOVE EXTRA “YELLOW BAR” SPACING AROUND IMAGE + DETAILS
+// MOBILE: REMOVE EXTRA SPACING AROUND IMAGE + DETAILS
 // ------------------------------------------------------------
 
 @media (max-width: 600px) {
-  // 1) The padding inside the details section often adds a band above/below
   .jj-product-page section.productView-details.product-data,
   .jj-product-page .productView-details.product-data {
     padding-top: 0 !important;
@@ -190,19 +184,16 @@
     margin-bottom: 0 !important;
   }
 
-  // 2) The overall product view wrapper sometimes has extra padding
   .jj-product-page .productView {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
 
-  // 3) Tighten the gallery block (common source of “yellow bars” above/below)
   .jj-product-page .productView-images {
     margin: 0 !important;
     padding: 0 !important;
   }
 
-  // If your theme uses a figure/viewport wrapper, this helps too (safe if absent)
   .jj-product-page .productView-image,
   .jj-product-page .productView-imageCarousel,
   .jj-product-page .productView-imageCarousel-main,
@@ -211,7 +202,6 @@
     padding: 0 !important;
   }
 
-  // 4) Pull the options area up a touch (reduces the band right before COLOR:)
   .jj-product-page .productView-options {
     margin-top: 0.25rem !important;
   }
@@ -267,5 +257,67 @@
     width: 28px;
     height: 28px;
     font-size: 16px;
+  }
+}
+
+// ------------------------------------------------------------
+// JJ STICKY ADD TO CART (MOBILE, JJ ONLY)
+// ------------------------------------------------------------
+
+.jj-sticky-atc {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  padding: 0.6rem 0.75rem;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+}
+
+.jj-sticky-atc.is-visible {
+  display: flex;
+}
+
+.jj-sticky-atc__left {
+  min-width: 0;
+  flex: 1;
+}
+
+.jj-sticky-atc__summary {
+  font-size: 0.9rem;
+  line-height: 1.1;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.jj-sticky-atc__btn {
+  background: #ff9900;
+  color: #111111;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  font-weight: 700;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+}
+
+.jj-sticky-atc__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Make room so the sticky bar doesn't cover page content */
+@media (max-width: 600px) {
+  body {
+    padding-bottom: 64px;
   }
 }
