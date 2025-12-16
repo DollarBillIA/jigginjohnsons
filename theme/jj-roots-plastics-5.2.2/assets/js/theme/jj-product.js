@@ -17,6 +17,7 @@
 
   /* ============================
      YOUR EXISTING JJ CODE (qty/options/arrows)
+     (unchanged from your current working file)
   ============================ */
 
   var form = page.querySelector('#jj-product-form');
@@ -84,7 +85,7 @@
         });
       }
       updateStickyVariant();
-      scheduleMoves(); // keep below-ATC block correct after option changes
+      scheduleMoves();
     });
   });
 
@@ -156,12 +157,10 @@
   }
 
   /* ============================
-     JJ MOVES — Availability + Custom Fields + Review
-     (under Add to Cart, JJ only)
+     JJ MOVES — Availability + Custom Fields + Review (under ATC)
   ============================ */
 
   function findAtcAnchor() {
-    // Primary Roots containers
     var el =
       page.querySelector('#add-to-cart-wrapper') ||
       page.querySelector('.add-to-cart-wrapper') ||
@@ -169,7 +168,6 @@
 
     if (el) return el;
 
-    // Fallback: find the actual submit button and work upward
     var btn =
       page.querySelector('#form-action-addToCart') ||
       page.querySelector('input#form-action-addToCart') ||
@@ -197,27 +195,32 @@
     return target;
   }
 
-  function findAvailabilityBlock() {
-    // Look specifically for the "Availability" dt you showed in DevTools
+  function findAvailability() {
+    // Find the dt whose text begins with "Availability"
     var dts = page.querySelectorAll('dt.productView-info-name');
     var availabilityDt = null;
 
     forEachNode(dts, function (dt) {
       var t = (dt.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
-      if (t.indexOf('availability') === 0) {
-        availabilityDt = dt;
-      }
+      if (t.indexOf('availability') === 0) availabilityDt = dt;
     });
 
-    if (!availabilityDt) return null;
+    if (!availabilityDt) return { mode: 'none' };
 
-    // In Roots this is typically inside dl.productView-info
-    var dl = closest(availabilityDt, 'dl.productView-info');
-    return dl || null;
+    // Case A: wrapped in a dl somewhere (move the whole dl)
+    var dl = closest(availabilityDt, 'dl');
+    if (dl) return { mode: 'dl', node: dl };
+
+    // Case B (your screenshot): dt + dd are siblings under productView-product
+    var dd = availabilityDt.nextElementSibling;
+    if (dd && dd.tagName && dd.tagName.toLowerCase() === 'dd') {
+      return { mode: 'pair', dt: availabilityDt, dd: dd };
+    }
+
+    return { mode: 'dtOnly', dt: availabilityDt };
   }
 
   function moveBlocksNow() {
-    // Marker so you can confirm execution in Elements (<html data-jj-moves="true">)
     document.documentElement.setAttribute('data-jj-moves', 'true');
 
     var atc = findAtcAnchor();
@@ -225,23 +228,38 @@
 
     var target = getOrCreateTarget(atc);
 
-    // 1) Availability (dl.productView-info)
-    var availabilityDl = findAvailabilityBlock();
+    // Availability
+    var availability = findAvailability();
 
-    // 2) Custom Fields container (can be any number of fields, we move the whole block)
+    // Custom Fields (ANY number — we move the container)
     var customFields =
       page.querySelector('.productView-customFields') ||
       page.querySelector('.productView-details .productView-customFields') ||
       page.querySelector('.productView-product .productView-customFields');
 
-    // 3) Write a Review link
+    // Write a Review
     var reviewLink =
       page.querySelector('.productView-reviewLink') ||
       page.querySelector('a[href*="#write_review"]') ||
       page.querySelector('a[href*="write_review"]');
 
-    // Move in the exact order you want under ATC:
-    if (availabilityDl) target.appendChild(availabilityDl);
+    // Ensure Availability stays formatted nicely even if it was a naked dt/dd:
+    if (availability.mode === 'dl' && availability.node) {
+      target.appendChild(availability.node);
+    } else if (availability.mode === 'pair' && availability.dt && availability.dd) {
+      // Put the pair into a dl so it retains correct semantics/layout
+      var dlWrap = target.querySelector('dl.productView-info.jj-availability');
+      if (!dlWrap) {
+        dlWrap = document.createElement('dl');
+        dlWrap.className = 'productView-info jj-availability';
+        target.appendChild(dlWrap);
+      }
+      dlWrap.appendChild(availability.dt);
+      dlWrap.appendChild(availability.dd);
+    } else if (availability.mode === 'dtOnly' && availability.dt) {
+      target.appendChild(availability.dt);
+    }
+
     if (customFields) target.appendChild(customFields);
     if (reviewLink) target.appendChild(reviewLink);
   }
@@ -258,7 +276,6 @@
 
   scheduleMoves();
 
-  // Keep it stable if BC re-renders pieces of the header/details area
   var obsTarget =
     page.querySelector('.productView-details') ||
     page.querySelector('.productView') ||
