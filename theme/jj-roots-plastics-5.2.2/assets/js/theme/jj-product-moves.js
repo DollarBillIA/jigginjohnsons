@@ -1,3 +1,7 @@
+console.log("JJ MOVES: FILE EXECUTED");
+document.documentElement.dataset.jjMoves = "true";
+
+
 /**
  * JJ Product page: move Availability + Custom Fields (e.g., Pack Quantity)
  * + Write a Review directly under the Add to Cart area (JJ only).
