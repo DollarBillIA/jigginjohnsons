@@ -12,9 +12,11 @@
   position: sticky;
   left: 0;
   z-index: 2;
-  background: #ffffff;
-  padding-right: 0.75rem;
 
+  /* Match the selection wrapper background (set below) */
+  background: transparent;
+
+  padding-right: 0.75rem;
   display: block;
   margin-bottom: 0.25rem;
   white-space: normal;
@@ -76,20 +78,74 @@
 
 @media screen and (max-width: 600px) {
   .productView-options .form-field[data-product-attribute='swatch'] {
-    padding-bottom: 0.6rem;
-    margin-bottom: 0.6rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+  }
+}
+
+// ------------------------------------------------------------
+// JJ "SELECTION" WRAPPER (match bottom section panels)
+// ------------------------------------------------------------
+//
+// Matches:
+//  --jj-panel:  #fffaf5
+//  --jj-border: #d2bfa4
+//  shadow:      0 3px 8px rgba(0,0,0,0.05)
+//  radius:      0.75rem
+//
+
+.jj-product-page .productView-options {
+  background: #fffaf5;
+  border: 1px solid #d2bfa4;
+  border-radius: 0.75rem;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  margin: 0.75rem 0 1rem;
+}
+
+/* Make each option group feel like a “row” inside the wrapper */
+.jj-product-page .productView-options .form-field {
+  margin: 0;
+  padding: 0.85rem 0;
+}
+
+/* Dividers between rows (subtle, but in-family with the brown text tone) */
+.jj-product-page .productView-options .form-field + .form-field {
+  border-top: 1px solid rgba(60, 39, 24, 0.14);
+}
+
+/* Sticky labels blend with the panel while scrolling */
+.jj-product-page
+  .productView-options
+  .form-field[data-product-attribute='swatch']
+  > .form-label {
+  background: #fffaf5;
+  color: #3c2718;
+}
+
+/* Small red required asterisk stays readable */
+.jj-product-page .productView-options .form-label small {
+  color: inherit;
+}
+
+/* Mobile: tighten slightly to reveal more of the swatch strip on first view */
+@media (max-width: 600px) {
+  .jj-product-page .productView-options {
+    padding: 0.95rem 1rem;
+    border-radius: 0.75rem;
   }
 
-  .productView-options
-    .form-field[data-product-attribute='swatch']
-    > .form-label {
-    margin-bottom: 0.15rem;
+  .jj-product-page .productView-options .form-field {
+    padding: 0.75rem 0;
   }
 }
 
 // ------------------------------------------------------------
 // JJ HEADER LAYOUT (PRICE ABOVE TITLE, JJ ONLY)
 // ------------------------------------------------------------
+//
+// In Roots, the title + price live as siblings inside `.productView-product`.
+// That’s the flex parent where `order` and `align-self` work.
 
 .jj-product-page .productView-product {
   display: flex;
@@ -103,122 +159,16 @@
   font-weight: 700;
   margin: 0 0 0.25rem 0;
   clear: none;
+  color: #3c2718;
 }
 
 .jj-product-page .productView-title {
   order: -1;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.15;
-  font-size: 1.75rem;
-}
-
-@media (max-width: 600px) {
-  .jj-product-page .productView-title {
-    font-size: 1.45rem;
-    margin-bottom: 0.35rem;
-  }
-}
-
-// ------------------------------------------------------------
-// JJ BELOW-ATC BLOCK (Availability / Custom Fields / Review)
-// ------------------------------------------------------------
-
-.jj-product-page .jj-below-atc {
-  margin-top: 0.75rem;
-}
-
-.jj-product-page .jj-below-atc .jj-availability {
-  margin: 0 0 0.35rem 0;
-}
-
-.jj-product-page .jj-below-atc dt.productView-info-name,
-.jj-product-page .jj-below-atc dd.productView-info-value {
-  margin: 0;
-  padding: 0;
-}
-
-.jj-product-page .jj-below-atc .productView-customFields {
-  margin: 0.35rem 0 0.65rem 0;
-}
-
-.jj-product-page .jj-below-atc .productView-customField {
-  margin: 0.25rem 0;
-}
-
-.jj-product-page .jj-below-atc .productView-reviewLink {
-  margin: 0;
-}
-
-// ------------------------------------------------------------
-// JJ ADD TO CART BUTTON (Amazon yellow)
-// ------------------------------------------------------------
-
-.jj-product-page #form-action-addToCart,
-.jj-product-page input#form-action-addToCart,
-.jj-product-page .form-action input.button--primary[type='submit'],
-.jj-product-page .add-to-cart-buttons input.button--primary[type='submit'] {
-  background: #ff9900;
-  color: #111111;
-  border: 1px solid rgba(0, 0, 0, 0.28);
-  border-radius: 8px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-}
-
-.jj-product-page #form-action-addToCart:hover,
-.jj-product-page input#form-action-addToCart:hover,
-.jj-product-page .form-action input.button--primary[type='submit']:hover,
-.jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:hover {
-  filter: brightness(0.96);
-}
-
-.jj-product-page #form-action-addToCart:focus,
-.jj-product-page input#form-action-addToCart:focus,
-.jj-product-page .form-action input.button--primary[type='submit']:focus,
-.jj-product-page .add-to-cart-buttons input.button--primary[type='submit']:focus {
-  outline: 2px solid rgba(0, 0, 0, 0.55);
-  outline-offset: 2px;
-}
-
-// ------------------------------------------------------------
-// MOBILE: REMOVE EXTRA SPACING AROUND IMAGE + DETAILS
-// ------------------------------------------------------------
-
-@media (max-width: 600px) {
-  .jj-product-page section.productView-details.product-data,
-  .jj-product-page .productView-details.product-data {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .jj-product-page .productView {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  .jj-product-page .productView-images {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .jj-product-page .productView-image,
-  .jj-product-page .productView-imageCarousel,
-  .jj-product-page .productView-imageCarousel-main,
-  .jj-product-page .productView-imageCarousel-slide {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .jj-product-page .productView-options {
-    margin-top: 0.25rem !important;
-  }
+  color: #3c2718;
 }
 
 // ------------------------------------------------------------
 // CUSTOM GALLERY ARROWS (TIED TO COLOR SWATCHES)
-// - bigger, higher contrast, easier to hit
 // ------------------------------------------------------------
 
 .productView-images {
@@ -229,28 +179,20 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 9999px;
-
-  border: 1px solid rgba(0, 0, 0, 0.22);
-  background: rgba(255, 255, 255, 0.85);
-
-  color: #111;
+  border: none;
+  background: rgba(0, 0, 0, 0.08);
+  color: #444;
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-  z-index: 6;
+  z-index: 5;
   padding: 0;
-
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1;
-
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
-  -webkit-tap-highlight-color: transparent;
 }
 
 .jj-gallery-arrow--prev {
@@ -262,128 +204,18 @@
 }
 
 .jj-gallery-arrow:hover {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
-}
-
-.jj-gallery-arrow:active {
-  transform: translateY(-50%) scale(0.98);
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .jj-gallery-arrow:focus {
-  outline: 2px solid rgba(0, 0, 0, 0.6);
+  outline: 2px solid #000;
   outline-offset: 2px;
 }
 
 @media (max-width: 768px) {
   .jj-gallery-arrow {
-    width: 46px;
-    height: 46px;
-    font-size: 24px;
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
   }
-}
-
-// ------------------------------------------------------------
-// JJ STICKY ADD TO CART (MOBILE, JJ ONLY)
-// - cleaner "app bar" feel, safer spacing, better hierarchy
-// ------------------------------------------------------------
-
-.jj-sticky-atc {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-
-  padding: 0.65rem 0.8rem;
-  background: rgba(255, 255, 255, 0.92);
-
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.14);
-
-  z-index: 9999;
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.jj-sticky-atc.is-visible {
-  display: flex;
-}
-
-.jj-sticky-atc__left {
-  min-width: 0;
-  flex: 1;
-}
-
-.jj-sticky-atc__summary {
-  font-size: 0.92rem;
-  line-height: 1.15;
-  color: #222;
-  font-weight: 600;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.jj-sticky-atc__btn {
-  background: #ff9900;
-  color: #111111;
-  border: 1px solid rgba(0, 0, 0, 0.28);
-  border-radius: 10px;
-
-  font-weight: 900;
-  letter-spacing: 0.2px;
-
-  padding: 0.72rem 1.05rem;
-  cursor: pointer;
-
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.16);
-}
-
-.jj-sticky-atc__btn:hover {
-  filter: brightness(0.96);
-}
-
-.jj-sticky-atc__btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.14);
-}
-
-.jj-sticky-atc__btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* Make room so the sticky bar doesn't cover page content */
-@media (max-width: 600px) {
-  body {
-    padding-bottom: 76px;
-  }
-}
-
-/* Respect phones with bottom safe-area (iPhone, etc.) */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .jj-sticky-atc {
-    padding-bottom: calc(0.65rem + env(safe-area-inset-bottom));
-  }
-
-  @media (max-width: 600px) {
-    body {
-      padding-bottom: calc(76px + env(safe-area-inset-bottom));
-    }
-  }
-}
-// ------------------------------------------------------------
-// JJ TEMP: REMOVE DEMO LOWER CONTENT BLOCK
-// ------------------------------------------------------------
-
-.jj-product-page .jj-details-shell {
-  display: none;
 }
